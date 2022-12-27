@@ -1,0 +1,82 @@
+{
+  "project_info": {
+    "project_number": "1063163179126",
+    "project_id": "farm-management-91b4c",
+    "storage_bucket": "farm-management-91b4c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063163179126:android:311b2afc6a432c2aacef57",
+        "android_client_info": {
+          "package_name": "com.example.farm_management_proj"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063163179126-kv2lsnhv3ulfnanb1cmhilpji0rcn9kj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomaW5NgRN7CTGLMoU173cq4Xa6ZYe2GU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063163179126-kv2lsnhv3ulfnanb1cmhilpji0rcn9kj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1063163179126-qcpgtcgltvs9fo1p3uk24bqpg72f5oe0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.farmManagementProject"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1063163179126:android:4b5837a4bdcc8a28acef57",
+        "android_client_info": {
+          "package_name": "com.example.farm_management_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1063163179126-kv2lsnhv3ulfnanb1cmhilpji0rcn9kj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAomaW5NgRN7CTGLMoU173cq4Xa6ZYe2GU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1063163179126-kv2lsnhv3ulfnanb1cmhilpji0rcn9kj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1063163179126-qcpgtcgltvs9fo1p3uk24bqpg72f5oe0.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.farmManagementProject"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

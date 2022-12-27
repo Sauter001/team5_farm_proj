@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1063163179126-e8e0jsitp594ganr0n69qpt8hi044mvp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1063163179126-e8e0jsitp594ganr0n69qpt8hi044mvp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyByGrrtN5763bkmjQabjDTVDHCRkJmhrpM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1063163179126</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.farmManagementProj</string>
+	<key>PROJECT_ID</key>
+	<string>farm-management-91b4c</string>
+	<key>STORAGE_BUCKET</key>
+	<string>farm-management-91b4c.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1063163179126:ios:5ee038e5dc7a49dcacef57</string>
+</dict>
+</plist>
