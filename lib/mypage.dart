@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:folding_cell/folding_cell.dart';
+//import 'package:folding_cell/folding_cell.dart';
 import 'comp_upper_appbar.dart';
 
 // 마이 페이지
