@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1063163179126-qcpgtcgltvs9fo1p3uk24bqpg72f5oe0.apps.googleusercontent.com",
+              "client_id": "1063163179126-e8e0jsitp594ganr0n69qpt8hi044mvp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.farmManagementProject"
+                "bundle_id": "com.example.farmManagementProj"
               }
             }
           ]
@@ -67,10 +67,10 @@
               "client_type": 3
             },
             {
-              "client_id": "1063163179126-qcpgtcgltvs9fo1p3uk24bqpg72f5oe0.apps.googleusercontent.com",
+              "client_id": "1063163179126-e8e0jsitp594ganr0n69qpt8hi044mvp.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.farmManagementProject"
+                "bundle_id": "com.example.farmManagementProj"
               }
             }
           ]
