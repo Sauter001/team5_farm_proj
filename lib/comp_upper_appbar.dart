@@ -26,7 +26,7 @@ class UpperAppbar {
         ),
         child: IconButton(
           onPressed: _gotoMyPage,
-          icon: Image.asset('assets/images/base_profile.png'),
+          icon: Image.asset('assets/images/baseProfile.jpg'),
         ),
       ),
     ],
