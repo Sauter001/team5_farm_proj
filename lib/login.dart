@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farm_management_proj/mypage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -41,6 +42,18 @@ class _LoginPageState extends State<LoginPage> {
                 'done': false,
                 'createTime': Timestamp.now(),
               });
+            },
+          ),
+          TextButton(
+            child: const Text('read'),
+            onPressed: () {
+              var value = FirebaseFirestore.instance
+                  .collection('plants')
+                  .doc('W2wlDEt7NgDCyaQES0lK');
+              Fluttertoast.showToast(
+                  msg:
+                      '${value.get().then((value) => value.data().toString())}',
+                  toastLength: Toast.LENGTH_SHORT);
             },
           ),
         ],
