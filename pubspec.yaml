@@ -29,15 +29,20 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_event_calendar: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   firebase_core: ^2.4.0
   cloud_firestore: ^4.3.0
+<<<<<<< Updated upstream
   calendar_date_picker2: ^0.3.5
   fluttertoast: ^8.0.8
   flutter_rating_bar: ^4.0.1
+=======
+  fluttertoast: ^8.1.2
+>>>>>>> Stashed changes
 
 dev_dependencies:
   flutter_test:
