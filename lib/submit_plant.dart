@@ -106,7 +106,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
             body:
             SafeArea(
 
-                child: 
+                child:
                   ListView(
                    // padding: const EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
                     padding: const EdgeInsets.symmetric(horizontal: 24.0),
