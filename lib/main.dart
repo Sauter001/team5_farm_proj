@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'submit_plant.dart';
 import 'app.dart';
-
+/*
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -11,5 +12,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(const FarmApp());
+  runApp(const SubmitPlantPage());
 }
+*/
