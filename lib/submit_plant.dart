@@ -321,7 +321,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                     ]
                 )
             ),
-            bottomNavigationBar:
+            // ** bottomNavigationBar: **
 
         )
     );
