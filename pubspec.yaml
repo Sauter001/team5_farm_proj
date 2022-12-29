@@ -48,6 +48,9 @@ dependencies:
   video_thumbnail: ^0.5.3
   calendar_date_picker2: ^0.3.5
   flutter_rating_bar: ^4.0.1
+  weekday_selector: ^1.1.0
+  flutter_colorpicker: ^1.0.3
+  fluttertoast: ^8.1.2
   folding_cell: "^1.0.2"
 
 dev_dependencies:

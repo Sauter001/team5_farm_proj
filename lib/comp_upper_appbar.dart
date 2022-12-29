@@ -17,16 +17,18 @@ void _openMenu() {
 }
 
 // 상단바 구현
-class UpperAppbar {
+class UpperAppbar{
   AppBar _appBar = AppBar(
     leading: const IconButton(
       onPressed: _openMenu,
       icon: Icon(Icons.menu),
     ),
+
     title: const Text(
       'appbar title',
       textAlign: TextAlign.center,
     ),
+
     actions: <Widget>[
       Container(
         decoration: BoxDecoration(

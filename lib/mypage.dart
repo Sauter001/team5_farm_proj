@@ -2,7 +2,7 @@ import 'package:farm_management_proj/comp_report_card.dart';
 import 'package:farm_management_proj/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:folding_cell/folding_cell.dart';
+import 'package:folding_cell/folding_cell.dart';git a
 import 'dart:developer';
 import 'comp_upper_appbar.dart';
 
