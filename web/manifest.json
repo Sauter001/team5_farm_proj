@@ -1,6 +1,6 @@
 {
-    "name": "team5",
-    "short_name": "team5",
+    "name": "farm_management_proj",
+    "short_name": "farm_management_proj",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

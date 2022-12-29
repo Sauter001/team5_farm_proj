@@ -5,7 +5,8 @@ import 'app.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // firebase 호출 시 무한루프 생김
+
+  // 초기 firebase DB 로딩
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
