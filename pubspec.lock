@@ -137,6 +137,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.2"
+  firebase_database:
+    dependency: "direct main"
+    description:
+      name: firebase_database
+      sha256: edaface84273794f000383cb67cee4b27c82a9a7df03f9a7d79b6d1da3afb41c
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.0.8"
+  firebase_database_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_database_platform_interface
+      sha256: a1325a0393b337ff7127a43567d93e9ea9c1015c233f80107688a762206721f9
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.2+16"
+  firebase_database_web:
+    dependency: transitive
+    description:
+      name: firebase_database_web
+      sha256: "3c9c1173ff1bbcd065a33f525709fabf1603ecc580d29c30fb1ee595af967a5b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1+18"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -150,6 +174,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.4"
+  flutter_colorpicker:
+    dependency: "direct main"
+    description:
+      name: flutter_colorpicker
+      sha256: "458a6ed8ea480eb16ff892aedb4b7092b2804affd7e046591fb03127e8d8ef8b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
   flutter_event_calendar:
     dependency: "direct main"
     description:
@@ -328,6 +360,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  percent_indicator:
+    dependency: "direct main"
+    description:
+      name: percent_indicator
+      sha256: cec41f67181fbd5322aa68b355621d1a4eea827426b8eeb613f6cbe195ff7b4a
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -469,6 +509,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.3"
+  weekday_selector:
+    dependency: "direct main"
+    description:
+      name: weekday_selector
+      sha256: "783954997aa30a8890b24196784543752dbf179282ca4d9139ecd70d63fea99e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
 sdks:
   dart: ">=2.18.0 <4.0.0"
-  flutter: ">=2.10.0"
+  flutter: ">=2.12.0"

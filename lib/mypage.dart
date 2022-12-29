@@ -1,10 +1,14 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farm_management_proj/comp_report_card.dart';
 import 'package:farm_management_proj/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:folding_cell/folding_cell.dart';git a
+import 'package:folding_cell/folding_cell.dart';
 import 'dart:developer';
 import 'comp_upper_appbar.dart';
+import 'comp_firebase_crud.dart';
 
 // 마이 페이지
 class MyPage extends StatefulWidget {
@@ -23,7 +27,7 @@ class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
-    String nickname = '텃밭입문';
+    String nickname = 'test';
     TextStyle nicknameTextStyle = const TextStyle(
       // 닉네임의 text style
       fontWeight: FontWeight.bold,
@@ -126,10 +130,7 @@ class _MyPageState extends State<MyPage> {
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: Row(
                             children: <Widget>[
-                              Text(
-                                nickname,
-                                style: nicknameTextStyle,
-                              ),
+                              GetUserName('user1', nicknameTextStyle),
                               Text(
                                 ' 님은',
                                 style: introTextStyle,
@@ -163,10 +164,7 @@ class _MyPageState extends State<MyPage> {
                               '총 ',
                               style: introTextStyle,
                             ),
-                            Text(
-                              '$plantType',
-                              style: numberTextStyle,
-                            ),
+                            GetPlants(numberTextStyle),
                             Text(
                               ' 종류의 식물을 ',
                               style: introTextStyle,
