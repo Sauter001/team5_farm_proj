@@ -1,4 +1,5 @@
 // 주간 일지 화면 구성
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -37,8 +38,11 @@ class WeeklyViewPage extends StatefulWidget {
 }
 
 class _WeeklyViewPageState extends State<WeeklyViewPage> {
+  LowerAppBar navigationbar = LowerAppBar();
+
   @override
   Widget build(BuildContext context) {
+
     throw UnimplementedError();
     // ignore: dead_code
     return MaterialApp(
@@ -74,5 +78,6 @@ class _WeeklyViewPageState extends State<WeeklyViewPage> {
                           calendarType: CalendarType.GREGORIAN))
                 ]),
             bottomNavigationBar: navigationbar.navigationBar));
+
   }
 }

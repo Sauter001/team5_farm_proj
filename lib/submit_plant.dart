@@ -1,26 +1,80 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:calendar_date_picker2/calendar_date_picker2.dart';
+import 'comp_upper_appbar.dart';
+import 'package:intl/intl.dart';
+import 'package:weekday_selector/weekday_selector.dart';
+import 'dart:ui';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+//void main() => runApp(MyApp());
 // 식물 등록 페이지
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: const SubmitPlantPage(),
+    );
+  }
+}
+
 class SubmitPlantPage extends StatefulWidget {
   const SubmitPlantPage({Key? key}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _SubmitPlantPageState();
+  _SubmitPlantPageState createState() => _SubmitPlantPageState();
 }
 
 class _SubmitPlantPageState extends State<SubmitPlantPage> {
   final _plantNameController = TextEditingController();
   final _nicknameController = TextEditingController();
-  TextEditingController _startDateController =
-      new TextEditingController(text: DateTime.now().toString());
-  final _endDateController = TextEditingController();
+  var _selectedTime =     DateTime.now();
+  DateTime today = new DateTime.now();
+  bool ing = true;
+  //String formattedDate = DateFormat('yyyy/mm/dd').format(today);
+  //TextEditingController _startDateController = new TextEditingController(text: formattedDate);
+  TextEditingController _endDateController = TextEditingController();
+
+  List<DateTime?> _singleDatePickerValueWithDefaultValue = [
+    DateTime.now(),
+  ];
+
   final _goalsController = TextEditingController();
+  final _weekController = TextEditingController();
 
   DateTime _selectedDate = DateTime.now();
 
+  final _goalList = ['죽이지 않기', '싹 틔우기', '꽃 피우기', '수확하기', '직접 입력'];
+  String? _selectedGoalValue;
+
+  final _toDOList = ['물 주기', '흙 갈기'];
+  String? _selectedToDoValue;
+  final weekValues = List.filled(7, false);
+
+  bool goalEnter = false;
+  int periodCnt = 1;
+  int plantCnt = 1;
+
+  Color pickerColor = Color(0xff443a49);
+  Color currentColor = Color(0xff443a49);
+
   @override
   Widget build(BuildContext context) {
+
+
+
+    void changeColor(Color color) {
+      setState(() => pickerColor = color);
+    }
+
+    final values = List.filled(7, false);
+    DateTime today = new DateTime.now();
+    String formattedDate = DateFormat('yyyy/mm/dd').format(today);
+    //TextEditingController _startDateController = new TextEditingController(text: today.toString());
+    TextEditingController _startDateController = new TextEditingController(
+        text: formattedDate);
+
     Widget okButton = ElevatedButton(
       child: Text("OK"),
       onPressed: () {
@@ -28,6 +82,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
       },
     );
 
+    // date picker dialog
     AlertDialog alert = AlertDialog(
       title: Text("날짜를 선택해주세요"),
       actions: [
@@ -39,239 +94,453 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
           child: CalendarDatePicker2(
             config: CalendarDatePicker2Config(),
             initialValue: [],
-          )),
-    );
-    return MaterialApp(
-        home: Scaffold(
-      appBar: AppBar(
-        title: const Text('식물 등록'),
+            onValueChanged: (values) =>
+                setState(() => _endDateController ),
+          )
       ),
-      body: SafeArea(
-          child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              children: <Widget>[
-            const SizedBox(height: 12.0),
-            IconButton(
-              icon: const Icon(Icons.palette),
-              onPressed: () {},
-            ),
-            Row(
-              children: <Widget>[
-                const Text('이름  '),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 2.0),
-                      ),
-                    ),
-                    controller: _plantNameController,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              children: <Widget>[
-                const Text('애칭  '),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 2.0),
-                      ),
-                    ),
-                    controller: _nicknameController,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              children: <Widget>[
-                const Text('재배 시작일  '),
-                IconButton(
-                    icon: const Icon(Icons.calendar_month),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return alert;
-                          });
-                    }),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 2.0),
-                      ),
-                    ),
-                    controller: _startDateController,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              children: <Widget>[
-                const Text('재배 종료일  '),
-                IconButton(
-                    icon: const Icon(Icons.calendar_month),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return alert;
-                          });
-                    }),
-                Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.green, width: 2.0),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black, width: 2.0),
-                      ),
-                    ),
-                    controller: _endDateController,
-                  ),
-                )
-              ],
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-              children: <Widget>[
-                const Text('목표  '),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const Text('+ 추가'),
-                ),
-              ],
-            ),
-            Divider(),
-            TextField(
-              decoration: const InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.green, width: 2.0),
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 2.0),
-                ),
-              ),
-              controller: _goalsController,
-            ),
-            const SizedBox(height: 12.0),
-            Row(
-                //mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  const Text('반복 설정'),
-                  Spacer(),
-                  ElevatedButton(
-                    child: const Text('+ 추가'),
-                    onPressed: () {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return Dialog(
-                                child: Column(children: <Widget>[
-                              const Text('반복 설정 추가'),
-                              const SizedBox(height: 12),
-                              Divider(),
-                              const SizedBox(height: 18),
-                              const Text('이름'),
-                              const SizedBox(height: 8),
+    );
 
-                              Row(children: <Widget>[
-                                TextField(
-                                  decoration: const InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.green, width: 2.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 2.0),
-                                    ),
-                                  ),
-                                  controller: _plantNameController,
+
+    UpperAppbar appbar = new UpperAppbar();
+    appbar.changeTitle('식물 등록');
+
+    return Builder(
+        builder: (BuildContext ctx) {
+          return Scaffold(
+            appBar: appbar.appBar,
+
+            body:
+            SafeArea(
+
+                child:
+                  ListView(
+                   // padding: const EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+                    padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                    children: <Widget>[
+                      const SizedBox(height: 12.0),
+
+                      Row(
+                        children: <Widget>[
+                          const Text('이름    ', style: TextStyle(fontSize: 20)),
+                          Expanded(
+                            child:
+                            TextField(
+                              decoration: const InputDecoration(
+                                focusedBorder:
+                                OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.green, width: 2.0),
                                 ),
-                                // ** checkbox **
-                              ]),
-                              const SizedBox(height: 18),
-                              const Text('이름'),
-                              const SizedBox(height: 8),
-
-                              Row(children: <Widget>[
-                                TextField(
-                                  decoration: const InputDecoration(
-                                    focusedBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.green, width: 2.0),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderSide: BorderSide(
-                                          color: Colors.black, width: 2.0),
-                                    ),
-                                  ),
-                                  controller: _plantNameController,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 2.0),
                                 ),
-                                // ** checkbox **
-                                const Text(' 주마다'),
-                              ]),
-                              const SizedBox(height: 8),
-                              // ** weekday picker **
-                              const SizedBox(height: 25),
-                              Row(children: <Widget>[
-                                Spacer(),
-                                ElevatedButton(
-                                    child: const Text('닫기'), onPressed: () {}),
-                                ElevatedButton(
-                                    child: const Text('확인'), onPressed: () {})
-                              ])
-                            ]));
-                          });
-                    },
-                  ),
-                ]),
-            Divider(),
+                              ),
+                              style: TextStyle(fontSize: 25, height: 0.5,),
+                              controller: _plantNameController,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.palette),
+                            onPressed: () {
+                              showDialog(context: ctx, builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('대표색을 선택해주세요'),
+                                  content: SingleChildScrollView(
+                                     child: BlockPicker(
+                                       pickerColor: currentColor,
+                                       onColorChanged: changeColor,
+                                     ),
+                                  ),
+                                  actions: <Widget>[
+                                    ElevatedButton(
+                                      child: const Text('완료'),
+                                      onPressed: () {
+                                        setState(() => currentColor = pickerColor);
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                );
+                              });
 
-            /*
-              TextField(
-                decoration: const InputDecoration(
-                  filled: true,
-                  labelText: '비밀번호',
-                ),
-                obscureText: true,
-              ),
-              OverflowBar(
-                alignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  TextButton(
-                    child: const Text('취소'),
-                    onPressed: (){
-                    },
-                  ),
-                  ElevatedButton(
-                    child: const Text('로그인'),
-                    onPressed: (){
-                      Navigator.pop(context);
-                    },
-                  )
-                ],
-              )*/
-          ])),
-      // ** bottomNavigationBar: **
-    ));
+                            },
+                            iconSize: 35,
+                          ),
+                        ],
+                      ),
+
+                      const SizedBox(height: 12.0),
+
+                      Row(
+                        children: <Widget>[
+                          const Text('애칭    ', style: TextStyle(fontSize: 20)),
+                          Expanded(
+                            child:
+
+                                  TextField(
+                                    decoration: const InputDecoration(
+                                      focusedBorder:
+                                      OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.green, width: 2.0),
+                                      ),
+                                      enabledBorder: OutlineInputBorder(
+                                        borderSide: BorderSide(
+                                            color: Colors.black, width: 2.0),
+                                      ),
+                                    ),
+                                    style: TextStyle(fontSize: 25, height: 0.5,),
+                                    controller: _nicknameController,
+                                  ),
+
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12.0),
+
+                      Row(
+                        children: <Widget>[
+                          const Text('재배 시작일  ', style: TextStyle(fontSize: 20)),
+                          IconButton(
+                              icon: const Icon(Icons.calendar_month),
+                              onPressed: () {
+                                Future<DateTime?> selectedDate = showDatePicker(
+                                  context: context, // context 인수전달
+                                  initialDate: DateTime.now(), // 초깃값
+                                  firstDate: DateTime(2021), // 시작일 2021년 1월 1일
+                                  lastDate: DateTime(2030), // 마지막일 2030년 1월 1일
+                                  builder: (BuildContext context, Widget? child) {
+                                    return Theme(
+                                      // 따로 정의 하지 않으면 default 값이 설정 됨
+                                      data: ThemeData.dark(), // 다크테마
+                                      child: child as Widget,
+                                    );
+                                  },
+                                );
+                                selectedDate.then((dateTime) {
+                                  setState(() {
+                                   // _selectedTime = dateTime;
+                                  });
+                                });
+                              },
+                              iconSize: 30,
+
+                          ),
+                          Expanded(
+                            child:
+                            TextField(
+                              decoration: const InputDecoration(
+                                focusedBorder:
+                                OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.green, width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 2.0),
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 25, height: 0.5,),
+                              controller: TextEditingController(text: _selectedTime.toString()),
+
+                            ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12.0),
+
+                      Row(
+                        children: <Widget>[
+                          const Text('재배 종료일  ', style: TextStyle(fontSize: 20)),
+                          IconButton(
+                              icon: const Icon(Icons.calendar_month),
+                              onPressed: () {
+                                showDialog(context: ctx, builder: (context) {
+                                  return /*AlertDialog(
+                                    title: Text("날짜를 선택해주세요"),
+                                    actions: [
+                                      okButton,
+                                    ],
+                                    content: Container(
+                                        width: 300,
+                                        height: 300,
+                                        child: CalendarDatePicker2(
+                                          config: CalendarDatePicker2Config(),
+                                          initialValue: ,
+
+                                          onValueChanged: (values) =>
+                                              setState(() => _endDateController = values),
+                                        )
+                                    ),
+                                  );*/
+                                  alert;
+                                });
+                              },
+                              iconSize: 30,
+                          ),
+                          Expanded(
+                            child:
+                            TextField(
+                              decoration: const InputDecoration(
+                                focusedBorder:
+                                OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.green, width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 2.0),
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 25, height: 0.5,),
+                              controller: _endDateController,
+                            ),
+                          )
+                        ],
+                      ),
+
+                      const SizedBox(height: 12.0),
+                      Row(
+                        children: <Widget>[
+                          const Text('목표  ', style: TextStyle(fontSize: 20)),
+                          Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+
+                            },
+                            child: const Text('+ 추가'),
+                          ),
+                        ],
+                      ),
+                      Divider(thickness: 2, color: Colors.black54, height: 15),
+                      Container(
+                          child:
+                          DropdownButton(
+                            hint: Text('목표 입력하기'),
+                            items: _goalList
+                                .map(
+                                  (String item) => DropdownMenuItem(
+                                child: Text(item),
+                                value: item,
+                              ),
+                            )
+                                .toList(),
+                            onChanged: (String? value) => setState(() {
+                              print('==> ${this._selectedGoalValue}');
+                              print('==> selected $value');
+                             /* if('${this._selectedGoalValue}' == '직접 입력') {goalEnter = true;}*/
+
+                              this._selectedGoalValue = value;
+                            }),
+                            value: _selectedGoalValue,
+
+                          )
+
+                      ),
+/*
+                      if(goalEnter == true)
+
+                          Expanded(
+                            child:
+                            TextField(
+                              decoration: const InputDecoration(
+                                focusedBorder:
+                                OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.green, width: 2.0),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide(
+                                      color: Colors.black, width: 2.0),
+                                ),
+                              ),
+                              style: TextStyle(fontSize: 25, height: 0.5,),
+                              controller: _goalsController,
+                            ),
+                          ),
+*/
+                      const SizedBox(height: 12.0),
+
+                      Row(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            const Text('반복 설정', style: TextStyle(fontSize: 20)),
+                            Spacer(),
+                            ElevatedButton(
+                              child: const Text('+ 추가'),
+                              onPressed: () {
+                                showDialog(context: ctx, builder: (context) {
+                                  return StatefulBuilder(
+                                    builder: (BuildContext context, StateSetter setState){
+                                      return AlertDialog(
+                                          title: const Text('반복 설정 추가', style: TextStyle(fontSize: 20)),
+                                          content: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: <Widget>[
+                                                Divider(thickness: 2, color: Colors.black54, height: 5),
+                                                Row(
+                                                    children: <Widget>[
+                                                      const Text('할 일 :   '),
+                                                      Container(
+                                                          child:
+                                                          DropdownButton(
+                                                            hint: Text('반복 설정할 일'),
+                                                            items: _toDOList
+                                                                .map(
+                                                                  (String item) => DropdownMenuItem(
+                                                                child: Text(item),
+                                                                value: item,
+                                                              ),
+                                                            )
+                                                                .toList(),
+                                                            onChanged: (String? value) => setState(() {
+                                                              print('==> ${this._selectedToDoValue}');
+                                                              print('==> selected $value');
+                                                              this._selectedToDoValue = value;
+
+                                                            }),
+                                                            value: _selectedToDoValue,
+                                                          )
+                                                      ),
+                                                    ]
+                                                ),
+
+                                                const SizedBox(height: 10),
+                                                Row(
+                                                    children: <Widget>[
+                                                      const Text('반복 :   '),
+                                                      Expanded(
+                                                        child:
+                                                        TextField(
+                                                          decoration: const InputDecoration(
+                                                            focusedBorder:
+                                                            OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Colors
+                                                                      .green,
+                                                                  width: 2.0),
+                                                            ),
+                                                            enabledBorder: OutlineInputBorder(
+                                                              borderSide: BorderSide(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  width: 2.0),
+                                                            ),
+                                                          ),
+                                                          controller: _weekController, // 임시
+                                                        ),
+                                                      ),
+                                                      const Text('주마다')
+                                                    ]
+                                                ),
+                                                WeekdaySelector(
+                                                  selectedFillColor: Colors.indigo,
+                                                  onChanged: (v) {
+                                                    print(v);
+                                                    setState(() {
+                                                      weekValues[v % 7] = !weekValues[v % 7];
+                                                    });
+                                                  },
+                                                  values: weekValues,
+                                                ),
+
+                                              ]),
+
+
+
+                                          actions:
+                                          <Widget>[
+                                            Spacer(),
+                                            ElevatedButton(
+                                                child: const Text('닫기'),
+                                                onPressed: () => Navigator.pop(context)
+                                            ),
+                                            ElevatedButton(
+                                                child: const Text('확인'),
+                                                onPressed: () {
+                                                  FirebaseFirestore.instance.collection('plants')
+                                                                              .doc('plant${plantCnt}')
+                                                                              .collection('alarmList')
+                                                                              .doc('list${periodCnt}')
+                                                      .set({'name': _selectedToDoValue,
+                                                            'periodWeek': _weekController.text,
+                                                            'periodDay': weekValues
+                                                            });
+                                                  Navigator.pop(context);
+                                                  // recall and rebuild the screen
+                                                  setState(() {
+                                                    periodCnt+=1;
+                                                    weekValues[0] = false;
+                                                    weekValues[1] = false;
+                                                    weekValues[2] = false;
+                                                    weekValues[3] = false;
+                                                    weekValues[4] = false;
+                                                    weekValues[5] = false;
+                                                    weekValues[6] = false;
+                                                    _weekController.text = '';
+                                                    _selectedToDoValue = null;
+                                                  });
+
+                                                  })
+                                          ]
+
+
+                                      );
+                                    }
+                                  );
+
+                                });
+                              },
+                            ),
+                          ]
+                      ),
+
+                      Divider(thickness: 2, color: Colors.black54, height: 15),
+                      const SizedBox(height: 30),
+                      Spacer(),
+                      SizedBox(
+                        //alignment: Alignment.topCenter,
+                        child:
+                          ElevatedButton(
+                            onPressed: () async {
+                              print('${_plantNameController.text}');
+                              print('${_nicknameController.text}');
+                              print('${_startDateController.text}');
+                              print('${_endDateController.text}');
+                              print('${_selectedGoalValue}');
+                              await FirebaseFirestore.instance.collection('plants').doc('plant${plantCnt}')
+                                  .set(
+                                  {'name': _plantNameController.text,
+                                    'nickname': _nicknameController.text,
+                                    'color': currentColor.toString(),
+                                    'startDate': _startDateController.text,
+                                    'endDate': _endDateController.text,
+                                    'goal': _selectedGoalValue,
+                                    'ing' : ing
+                                  }
+                              )
+                                  .then((value) => print("완료"));
+                              setState(() {
+                                plantCnt+=1;
+                              });
+                            },
+                            child: const Text('저장하기'),
+                        ),
+                      )
+
+
+                    ]
+                )
+            ),
+            // ** bottomNavigationBar: **
+
+
+          );
+        }
+    );
   }
 }
