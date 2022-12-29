@@ -300,9 +300,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               
               const Text('사진'),
-              Semantics(
-                    label: 'image_picker_example_from_gallery',
-                    child: FloatingActionButton(
+              
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                children: <Widget>[
+                  FloatingActionButton(
                       onPressed: () {
                         //isVideo = false;
                         _onImageButtonPressed(ImageSource.gallery, context: context);
@@ -311,10 +315,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       tooltip: 'Pick Image from gallery',
                       child: const Icon(Icons.photo),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: FloatingActionButton(
+                  FloatingActionButton(
                       onPressed: () {
                         _onImageButtonPressed(ImageSource.camera, context: context);
                       },
@@ -322,7 +323,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       tooltip: 'Take a Photo',
                       child: const Icon(Icons.camera_alt),
                     ),
-                  ),
+                ],
+              ),
                   Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
