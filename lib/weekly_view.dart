@@ -17,6 +17,7 @@ class _WeeklyViewPageState extends State<WeeklyViewPage> {
   @override
   Widget build(BuildContext context) {
     UpperAppbar appbar = UpperAppbar(context).changeTitle('주간 일지', context);
+
     return MaterialApp(
       home: Scaffold(
         appBar: appbar.appBar,
