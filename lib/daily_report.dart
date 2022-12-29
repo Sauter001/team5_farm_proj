@@ -5,9 +5,17 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
-final today = DateUtils.dateOnly(DateTime.now());
 
+String getToday(){
+  DateTime now = DateTime.now();
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
+  String strToday = formatter.format(now);
+  return strToday;
+}
+
+final today = getToday();// 오늘의 날짜
 
 void main() {
   runApp(const MyApp());
@@ -152,10 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // 캘린더 값을 기본값을 오늘로 설정
   List<DateTime?> _dialogCalendarPickerValue = [
-    DateTime.now(),
+    DateTime(2022, 12, 30),
   ];
   // body에 버튼과 달력 위치시키기
   @override
+  
   Widget build(BuildContext context) {
     
     final ButtonStyle style =
@@ -170,9 +179,13 @@ class _MyHomePageState extends State<MyHomePage> {
           width: 375,
           child: ListView(
             children: <Widget>[
-              _buildCalendarDialogButton(),
-              _buildDefaultSingleDatePickerWithValue(),
-              
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _buildDefaultSingleDatePickerWithValue(),
+                ]
+              ),              
               // 작물 버튼
               Row(
                 
@@ -180,7 +193,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
-                              _buildCalendarDialogButton(), //
 
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -300,7 +312,6 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               
               const Text('사진'),
-              
               Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -391,7 +402,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: const Text('삭제하기'),
                   ),
                 ],
-              ),
+              ), //_handlePreview(),
             ],
           ),
         ),
@@ -447,7 +458,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (datePickerType == CalendarDatePicker2Type.single) {
       if (values.isNotEmpty) {
         final startDate = values[0].toString().replaceAll('00:00:00.000', '');
-        //valueText = '$startDate';
+        valueText = '$startDate';
       } else {
         return 'null';
       }
