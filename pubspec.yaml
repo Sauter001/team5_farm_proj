@@ -36,18 +36,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   firebase_core: ^2.4.0
   cloud_firestore: ^4.3.0
-  calendar_date_picker2: ^0.3.5
   image_picker: ^0.8.6
   video_player: ^2.4.10
   intl: ^0.18.0
-<<<<<<< HEAD
   flutter_3d_choice_chip: ^0.1.4
   video_thumbnail: ^0.5.3
-=======
   calendar_date_picker2: ^0.3.5
   flutter_rating_bar: ^4.0.1
   fluttertoast: ^8.1.2
->>>>>>> 5045881a4817b95aca0e3740259faec11cc7aca7
+  folding_cell: "^1.0.2"
 
 dev_dependencies:
   flutter_test:
