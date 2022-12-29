@@ -101,8 +101,8 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
     );
 
 
-    UpperAppbar appbar = new UpperAppbar();
-    appbar.changeTitle('식물 등록');
+    UpperAppbar appbar = new UpperAppbar(context);
+    appbar.changeTitle('식물 등록', context);
 
     return Builder(
         builder: (BuildContext ctx) {
