@@ -5,17 +5,25 @@ import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
+import 'package:intl/intl.dart';
 
-final today = DateUtils.dateOnly(DateTime.now());
 
+String getToday(){
+  DateTime now = DateTime.now();
+  DateFormat formatter = DateFormat('yyyy-MM-dd');
+  String strToday = formatter.format(now);
+  return strToday;
+}
+
+final today = getToday();// 오늘의 날짜
 
 void main() {
-  runApp(const DailyReportPage());
+  runApp(const MyApp());
 }
 
 // 앱 제목
-class DailyReportPage extends StatelessWidget {
-  const DailyReportPage({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +58,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _airPressed = false;
   bool _acPressed = false;
   bool _snowPressed = false;
+
+  // 작물 버튼 클릭
+  bool _potatoPressed = false;
+  bool _sweetPotatoPressed = false;
+  bool _carrotPressed = false;
+  bool _lettucePressed = false;
 
 
 
@@ -146,10 +160,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   // 캘린더 값을 기본값을 오늘로 설정
   List<DateTime?> _dialogCalendarPickerValue = [
-    DateTime.now(),
+    DateTime(2022, 12, 30),
   ];
   // body에 버튼과 달력 위치시키기
   @override
+  
   Widget build(BuildContext context) {
     
     final ButtonStyle style =
@@ -164,51 +179,70 @@ class _MyHomePageState extends State<MyHomePage> {
           width: 375,
           child: ListView(
             children: <Widget>[
-              _buildCalendarDialogButton(),
-              _buildDefaultSingleDatePickerWithValue(),
-              
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  _buildDefaultSingleDatePickerWithValue(),
+                ]
+              ),              
               // 작물 버튼
               Row(
+                
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
-                  OutlinedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
+
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _sweetPotatoPressed ?Colors.red : Colors.green),
                     onPressed: () {
+                      setState(() {
+                        _sweetPotatoPressed = !_sweetPotatoPressed;
+                      });
                     },
                     child: const Text('고구마',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
+
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _potatoPressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _potatoPressed = !_potatoPressed;
+                      });
+                    },
                     child: const Text('감자',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
+                  
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _carrotPressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _carrotPressed = !_carrotPressed;
+                      });
+                    },
                     child: const Text('당근',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _lettucePressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _lettucePressed = !_lettucePressed;
+                      });
+                    },
                     child: const Text('상추',
                     style: TextStyle(
                       color: Colors.black,
@@ -278,9 +312,12 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               
               const Text('사진'),
-              Semantics(
-                    label: 'image_picker_example_from_gallery',
-                    child: FloatingActionButton(
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                children: <Widget>[
+                  FloatingActionButton(
                       onPressed: () {
                         //isVideo = false;
                         _onImageButtonPressed(ImageSource.gallery, context: context);
@@ -289,10 +326,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       tooltip: 'Pick Image from gallery',
                       child: const Icon(Icons.photo),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 16.0),
-                    child: FloatingActionButton(
+                  FloatingActionButton(
                       onPressed: () {
                         _onImageButtonPressed(ImageSource.camera, context: context);
                       },
@@ -300,7 +334,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       tooltip: 'Take a Photo',
                       child: const Icon(Icons.camera_alt),
                     ),
-                  ),
+                ],
+              ),
                   Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -367,7 +402,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: const Text('삭제하기'),
                   ),
                 ],
-              ),
+              ), //_handlePreview(),
             ],
           ),
         ),
@@ -423,7 +458,7 @@ class _MyHomePageState extends State<MyHomePage> {
     if (datePickerType == CalendarDatePicker2Type.single) {
       if (values.isNotEmpty) {
         final startDate = values[0].toString().replaceAll('00:00:00.000', '');
-        //valueText = '$startDate';
+        valueText = '$startDate';
       } else {
         return 'null';
       }
