@@ -7,15 +7,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
 
+import 'package:flutter_3d_choice_chip/flutter_3d_choice_chip.dart';
+import 'package:video_thumbnail/video_thumbnail.dart';
 
-String getToday(){
-  DateTime now = DateTime.now();
-  DateFormat formatter = DateFormat('yyyy-MM-dd');
-  String strToday = formatter.format(now);
-  return strToday;
+enum MediaType {
+  image,
+  video;
 }
-
-final today = getToday();// 오늘의 날짜
 
 void main() {
   runApp(const MyApp());
@@ -46,13 +44,16 @@ class MyHomePage extends StatefulWidget {
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-// 캘린더
 class _MyHomePageState extends State<MyHomePage> {
-  List<XFile>? _imageFileList;
+  MediaType _mediaType = MediaType.image;
 
+  String? imagePath;
+
+  // 체크리스트 클릭
   bool _isCheckedWater = false;
   bool _isCheckedSoil = false;
 
+  // 날씨 아이콘 클릭
   bool _sunnyPressed = false;
   bool _cloudPressed = false;
   bool _airPressed = false;
@@ -65,135 +66,47 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _carrotPressed = false;
   bool _lettucePressed = false;
 
-
-
-  void _setImageFileListFromFile(XFile? value) {
-    _imageFileList = value == null ? null : <XFile>[value];
-  }
-
-  dynamic _pickImageError;
-  String? _retrieveDataError;
-
-  final ImagePicker _picker = ImagePicker();  
-
-  Future<void> _onImageButtonPressed(ImageSource source,
-      {BuildContext? context, bool isMultiImage = false}) async {
-      await _displayPickImageDialog(context!,
-          (double? maxWidth, double? maxHeight, int? quality) async {
-        try {
-          final XFile? pickedFile = await _picker.pickImage(
-            source: source,
-          );
-          setState(() {
-            _setImageFileListFromFile(pickedFile);
-          });
-        } catch (e) {
-          setState(() {
-            _pickImageError = e;
-          });
-        }
-      });
-  }
-
-
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-
-  Widget _previewImages() {
-    if (_imageFileList != null) {
-      return Semantics(
-        label: 'image_picker_example_picked_images',
-        child: ListView.builder(
-          key: UniqueKey(),
-          itemBuilder: (BuildContext context, int index) {
-            // Why network for web?
-            // See https://pub.dev/packages/image_picker#getting-ready-for-the-web-platform
-            return Semantics(
-              label: 'image_picker_example_picked_image',
-              child: kIsWeb
-                  ? Image.network(_imageFileList![index].path)
-                  : Image.file(File(_imageFileList![index].path)),
-            );
-          },
-          itemCount: _imageFileList!.length,
-        ),
-      );
-    } else if (_pickImageError != null) {
-      return Text(
-        'Pick image error: $_pickImageError',
-        textAlign: TextAlign.center,
-      );
-    } else {
-      return const Text(
-        'You have not yet picked an image.',
-        textAlign: TextAlign.center,
-      );
-    }
-  }
-
-  Widget _handlePreview() {
-      return _previewImages();
-  }
-
-  Future<void> retrieveLostData() async {
-    final LostDataResponse response = await _picker.retrieveLostData();
-    if (response.isEmpty) {
-      return;
-    }
-    if (response.file != null) {
-        setState(() {
-          if (response.files == null) {
-            _setImageFileListFromFile(response.file);
-          } else {
-            _imageFileList = response.files;
-          }
-        });
-    } else {
-      _retrieveDataError = response.exception!.code;
-    }
-  }
-
-
-  // 캘린더 값을 기본값을 오늘로 설정
   List<DateTime?> _dialogCalendarPickerValue = [
+    // 입력받은 날짜 값을 출력하면 되는데 
+    // 값이 없으면 null 값 출력
     DateTime(2022, 12, 30),
   ];
-  // body에 버튼과 달력 위치시키기
+
+
   @override
-  
   Widget build(BuildContext context) {
-    
-    final ButtonStyle style =
+
+      final ButtonStyle style =
       ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        //centerTitle: true,
+        title: const Text("Image & Video Picker example"),
       ),
-      body: Center(
-        child: SizedBox(
-          width: 375,
-          child: ListView(
-            children: <Widget>[
-              Row(
+      body: Center(      
+          child: SingleChildScrollView( 
+        child: Container( 
+            margin: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
                   _buildDefaultSingleDatePickerWithValue(),
-                ]
-              ),              
-              // 작물 버튼
+                ],
+              ),
+                // 작물 버튼
+
+              
               Row(
-                
-                mainAxisSize: MainAxisSize.min,
+                //mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
-
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
                     backgroundColor: _sweetPotatoPressed ?Colors.red : Colors.green),
@@ -203,9 +116,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     child: const Text('고구마',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
 
                   ElevatedButton(
@@ -217,9 +131,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     child: const Text('감자',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   
                   ElevatedButton(
@@ -231,9 +146,10 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     child: const Text('당근',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -244,16 +160,17 @@ class _MyHomePageState extends State<MyHomePage> {
                       });
                     },
                     child: const Text('상추',
-                    style: TextStyle(
-                      color: Colors.black,
-                    ),),
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
+                    ),
                   ),
                 ],
               ),
 
-              const Text('날씨'),
+                const Text('날씨'),
               Row(
-                mainAxisSize: MainAxisSize.min,
+                //mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
@@ -310,36 +227,141 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              
-              const Text('사진'),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                children: <Widget>[
-                  FloatingActionButton(
-                      onPressed: () {
-                        //isVideo = false;
-                        _onImageButtonPressed(ImageSource.gallery, context: context);
+                const Text('사진'),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ChoiceChip3D(
+                      style: ChoiceChip3DStyle.blue,
+                      selected: _mediaType == MediaType.image,
+                      onSelected: () {
+                        setState(() {
+                          _mediaType = MediaType.image;
+                        });
                       },
-                      heroTag: 'image0',
-                      tooltip: 'Pick Image from gallery',
-                      child: const Icon(Icons.photo),
+                      onUnSelected: () {},
+                      height: 50,
+                      child: const Text(
+                        "사진 버튼",
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
-                  FloatingActionButton(
-                      onPressed: () {
-                        _onImageButtonPressed(ImageSource.camera, context: context);
+                    const SizedBox(
+                      width: 30,
+                    ),
+                    ChoiceChip3D(
+                      style: ChoiceChip3DStyle.red,
+                      selected: _mediaType == MediaType.video,
+                      onSelected: () {
+                        setState(() {
+                          _mediaType = MediaType.video;
+                        });
                       },
-                      heroTag: 'image2',
-                      tooltip: 'Take a Photo',
-                      child: const Icon(Icons.camera_alt),
-                    ),
-                ],
-              ),
-                  Row(
-                mainAxisSize: MainAxisSize.min,
+                      onUnSelected: () {},
+                      height: 50,
+                      child: const Text(
+                        "비디오 버튼",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                (imagePath != null)
+                    ? Image.file(File(imagePath!))
+                    : Container(
+                        width: 300,
+                        height: 300,
+                        color: Colors.grey[300]!,
+                      ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.grey,
+                            shadowColor: Colors.grey[400],
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          onPressed: () {
+                            pickMedia(ImageSource.gallery);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(
+                                  Icons.image,
+                                  size: 30,
+                                  color: Colors.red,
+                                ),
+                                Text(
+                                  "갤러리",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        )),
+                    Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 5),
+                        padding: const EdgeInsets.symmetric(vertical: 20),
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.white,
+                            onPrimary: Colors.grey,
+                            shadowColor: Colors.grey[400],
+                            elevation: 10,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0)),
+                          ),
+                          onPressed: () {
+                            pickMedia(ImageSource.camera);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.symmetric(
+                                vertical: 5, horizontal: 5),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                Icon(
+                                  Icons.camera_alt,
+                                  size: 30,
+                                  color: Colors.red,
+                                ),
+                                Text(
+                                  "카메라",
+                                  style: TextStyle(
+                                      fontSize: 13,
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold),
+                                )
+                              ],
+                            ),
+                          ),
+                        )),
+                  ],
+                ),
+                             
+                Row(
+                //mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
+                // 물주기 흙갈기 위젯 버튼
                 children: <Widget>[
                   const Text('물주기'),
                   Checkbox(
@@ -361,7 +383,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ],
               ),
-              const Text('메모'),
+
+                const Text('메모'),
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16), // 위치 정하기
                 child: TextField(
@@ -375,10 +398,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   maxLines: 6,
                 ),
               ),
-
-              // 작성완료, 삭제 버튼
-              Row(
-                mainAxisSize: MainAxisSize.min,
+                Row(
+                //mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
@@ -402,12 +423,34 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: const Text('삭제하기'),
                   ),
                 ],
-              ), //_handlePreview(),
-            ],
+              ),
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  void pickMedia(ImageSource source) async {
+    XFile? file;
+    if (_mediaType == MediaType.image) {
+      file = await ImagePicker().pickImage(source: source);
+    } else {
+      file = await ImagePicker().pickVideo(source: source);
+    }
+    if (file != null) {
+      imagePath = file.path;
+      if (_mediaType == MediaType.video) {
+        imagePath = await VideoThumbnail.thumbnailFile(
+            video: file.path,
+            imageFormat: ImageFormat.PNG,
+            quality: 100,
+            maxWidth: 300,
+            maxHeight: 300);
+      }
+      setState(() {});
+    }
   }
 
   Future<dynamic> _showSaveDialog(BuildContext context) {
@@ -447,17 +490,18 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+  // 달력 날짜 클릭시 시간 삭제
   String _getValueText(
     CalendarDatePicker2Type datePickerType,
     List<DateTime?> values,
   ) {
-    var valueText = (values.isNotEmpty ? values[0] : null)
+    var valueText = (values.isNotEmpty ? values[0] : DateTime.now())
         .toString()
         .replaceAll('00:00:00.000', '');
 
     if (datePickerType == CalendarDatePicker2Type.single) {
       if (values.isNotEmpty) {
-        final startDate = values[0].toString().replaceAll('00:00:00.000', '');
+        final startDate = (values.isNotEmpty ? values[0] : DateTime.now()).toString().replaceAll('00:00:00.000', '');
         valueText = '$startDate';
       } else {
         return 'null';
@@ -507,7 +551,8 @@ class _MyHomePageState extends State<MyHomePage> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(Icons.event),
+            // 달력 아이콘
+            icon: Icon(Icons.event), 
                     color: Colors.green,
             onPressed: () async {
               final values = await showCalendarDatePicker2Dialog(
@@ -518,6 +563,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 initialValue: _dialogCalendarPickerValue,
                 dialogBackgroundColor: Colors.white, // 날짜 선택 배경
               );
+
               if (values != null) {
                 // ignore: avoid_print
                 print(_getValueText(
@@ -525,9 +571,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   values,
                 ));
                 setState(() {
-                  _dialogCalendarPickerValue = values;
+                    _dialogCalendarPickerValue = values; // 캘린더를 누르면 값이 변경되도록 만들기                  
                 });
-              }
+              } 
             },
           ),
         ],
@@ -538,13 +584,14 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildDefaultSingleDatePickerWithValue() {
     final config = CalendarDatePicker2Config(
     );
+    //final startDate = _dialogCalendarPickerValue.toString().replaceAll('00:00:00.000', '');
 
     // 화면에 출력되는 내용
     
     return Row(
       mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    
       children: <Widget>[  
         // 버튼 클릭시 이전 날짜로 이동
         IconButton(
@@ -552,9 +599,13 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.green,
                     //size: 30.0,
                     onPressed: () {
+                      // _dialogCalendarPickerValue = _dialogCalendarPickerValue.subtract(Duration(days: 10));
+                      // 
                     },
-                  ),   
+                  ),  
+        _buildCalendarDialogButton(), 
         const SizedBox(width: 10),
+
         // 선택한 날짜 화면에 출력하기
             Text(
               _getValueText(
@@ -563,46 +614,17 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               style: TextStyle(fontSize: 30),
             ),
+            
             // 버튼 클릭시 다음 날짜로 이동
             IconButton(
-                    icon: Icon(Icons.arrow_forward_ios),
-                    color: Colors.green,
+              icon: Icon(Icons.arrow_forward_ios),
+              color: Colors.green,
                     //size: 30.0,
-                    onPressed: () {
-                      //_dialogCalendarPickerValue = _dialogCalendarPickerValue.add(Duration(days: 1));
-                    },
-                  ),
+              onPressed: () {
+                //_dialogCalendarPickerValue = _dialogCalendarPickerValue.add(Duration(days: 1));
+              },
+            ),
       ],
     );
   }
-  Future<void> _displayPickImageDialog(
-      BuildContext context, OnPickImageCallback onPick) async {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('사진을 업로드하시겠습니까?'),
-            actions: <Widget>[
-              TextButton(
-                  child: const Text('네'),
-                  onPressed: () {
-                    final double? width = null;
-                    final double? height = null;
-                    final int? quality = null;
-                    onPick(width, height, quality);
-                    Navigator.of(context).pop();
-                  }),
-              TextButton(
-                child: const Text('아니오'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
-  }
 }
-
-typedef OnPickImageCallback = void Function(
-    double? maxWidth, double? maxHeight, int? quality);
