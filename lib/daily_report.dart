@@ -10,12 +10,12 @@ final today = DateUtils.dateOnly(DateTime.now());
 
 
 void main() {
-  runApp(const DailyReportPage());
+  runApp(const MyApp());
 }
 
 // 앱 제목
-class DailyReportPage extends StatelessWidget {
-  const DailyReportPage({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +50,12 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _airPressed = false;
   bool _acPressed = false;
   bool _snowPressed = false;
+
+  // 작물 버튼 클릭
+  bool _potatoPressed = false;
+  bool _sweetPotatoPressed = false;
+  bool _carrotPressed = false;
+  bool _lettucePressed = false;
 
 
 
@@ -169,46 +175,62 @@ class _MyHomePageState extends State<MyHomePage> {
               
               // 작물 버튼
               Row(
+                
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
                 children: <Widget>[
-                  OutlinedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
+                              _buildCalendarDialogButton(), //
+
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _sweetPotatoPressed ?Colors.red : Colors.green),
                     onPressed: () {
+                      setState(() {
+                        _sweetPotatoPressed = !_sweetPotatoPressed;
+                      });
                     },
                     child: const Text('고구마',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
+
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _potatoPressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _potatoPressed = !_potatoPressed;
+                      });
+                    },
                     child: const Text('감자',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
+                  
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _carrotPressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _carrotPressed = !_carrotPressed;
+                      });
+                    },
                     child: const Text('당근',
                     style: TextStyle(
                       color: Colors.black,
                     ),),
                   ),
                   ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {},
+                    style: ElevatedButton.styleFrom(
+                    backgroundColor: _lettucePressed ?Colors.red : Colors.green),
+                    onPressed: () {
+                      setState(() {
+                        _lettucePressed = !_lettucePressed;
+                      });
+                    },
                     child: const Text('상추',
                     style: TextStyle(
                       color: Colors.black,
