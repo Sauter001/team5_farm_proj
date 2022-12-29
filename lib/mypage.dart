@@ -19,6 +19,7 @@ class _MyPageState extends State<MyPage> {
   final _foldingCellKey2 = GlobalKey<SimpleFoldingCellState>();
 
   List<bool> _selectedOrder = <bool>[true, false];
+  bool _isPlant = true;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,7 @@ class _MyPageState extends State<MyPage> {
     /* TODO: 작성한 일지 수 DB에서 불러오기 */
     int numOfReports = 7;
 
+    List<String> yearList = ["2022"];
     List reportInfoList = [
       {"name": "고구마", "date": '2022/03/10', "img": ""},
       {"name": "고구마", "date": '2022/08/21', "img": ""},
@@ -49,6 +51,7 @@ class _MyPageState extends State<MyPage> {
       {"name": "고구마", "date": '2022/11/22', "img": ""},
     ];
 
+    /* 식물-연도 바꾸는 toggle button */
     final toggle = ToggleButtons(
       borderWidth: 2,
       borderRadius: BorderRadius.circular(20),
@@ -61,6 +64,15 @@ class _MyPageState extends State<MyPage> {
             _selectedOrder[i] = (i == index);
           }
         });
+
+        switch (index) {
+          case 0:
+            _isPlant = true;
+            break;
+          case 1:
+            _isPlant = false;
+            break;
+        }
       },
       isSelected: _selectedOrder,
       color: Colors.black,
@@ -260,8 +272,33 @@ class _MyPageState extends State<MyPage> {
                         ],
                       ),
                     ),
-                    _CurrentPlantWidget(),
-                    ReportCards(reportInfoList).generate().reportCardList,
+                    _isPlant
+                        ? Column(
+                            children: [
+                              _CurrentPlantWidget(),
+                              ReportCards(reportInfoList)
+                                  .generate()
+                                  .reportCardList,
+                            ],
+                          )
+                        : Column(
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(10.0),
+                                alignment: Alignment.topLeft,
+                                child: Text(
+                                  yearList[0],
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 25,
+                                  ),
+                                ),
+                              ),
+                              ReportCards(reportInfoList)
+                                  .generate()
+                                  .reportCardList,
+                            ],
+                          ),
                   ],
                 ),
               ),
