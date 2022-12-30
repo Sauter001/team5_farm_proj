@@ -49,9 +49,8 @@ dependencies:
   weekday_selector: ^1.1.0
   flutter_colorpicker: ^1.0.3
   flutter_clean_calendar: ^1.1.0
-  table_calendar: ^3.0.6
+  table_calendar: ^3.0.
   flutter_calendar_week: ^3.0.0
-
 
 dev_dependencies:
   flutter_test:

@@ -1,3 +1,4 @@
+import 'package:farm_management_proj/submit_plant.dart';
 import 'package:flutter/material.dart';
 
 import 'login.dart';
@@ -10,10 +11,10 @@ class FarmApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Farm management',
-      initialRoute: '/login',
+      initialRoute: '/submit',
       routes: {
         // '/': 기본 화면 월간 화면으로 설정됨
-        '/login': (BuildContext context) => const LoginPage(),
+        '/submit': (BuildContext context) => const SubmitPlantPage(),
         '/': (BuildContext context) => const MonthlyViewPage(),
       },
     );

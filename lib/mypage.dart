@@ -1,10 +1,14 @@
+import 'dart:convert';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:farm_management_proj/comp_report_card.dart';
 import 'package:farm_management_proj/login.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:folding_cell/folding_cell.dart';git a
+import 'package:folding_cell/folding_cell.dart';
 import 'dart:developer';
 import 'comp_upper_appbar.dart';
+import 'comp_firebase_crud.dart';
 
 // 마이 페이지
 class MyPage extends StatefulWidget {
@@ -23,7 +27,7 @@ class _MyPageState extends State<MyPage> {
 
   @override
   Widget build(BuildContext context) {
-    String nickname = '텃밭입문';
+    String nickname = 'test';
     TextStyle nicknameTextStyle = const TextStyle(
       // 닉네임의 text style
       fontWeight: FontWeight.bold,
@@ -126,10 +130,7 @@ class _MyPageState extends State<MyPage> {
                           padding: const EdgeInsets.symmetric(vertical: 15.0),
                           child: Row(
                             children: <Widget>[
-                              Text(
-                                nickname,
-                                style: nicknameTextStyle,
-                              ),
+                              GetUserName('user1', nicknameTextStyle),
                               Text(
                                 ' 님은',
                                 style: introTextStyle,
@@ -163,10 +164,7 @@ class _MyPageState extends State<MyPage> {
                               '총 ',
                               style: introTextStyle,
                             ),
-                            Text(
-                              '$plantType',
-                              style: numberTextStyle,
-                            ),
+                            GetPlants(numberTextStyle),
                             Text(
                               ' 종류의 식물을 ',
                               style: introTextStyle,
@@ -209,8 +207,8 @@ class _MyPageState extends State<MyPage> {
                       key: _foldingCellKey2,
                       frontWidget:
                           _buildFrontWidget(_foldingCellKey2, '재배 종료 식물'),
-                      innerWidget: _buildInnerWidget(
-                          _foldingCellKey2, '재배 종료 식물', _CurrentPlantWidget()),
+                      innerWidget: _buildInnerWidget(_foldingCellKey2,
+                          '재배 종료 식물', /* 종료 식물 없음 */ Text('')),
                       cellSize: Size(MediaQuery.of(context).size.width, 160),
                       padding: EdgeInsets.all(15),
                       animationDuration: Duration(milliseconds: 300),
@@ -228,7 +226,7 @@ class _MyPageState extends State<MyPage> {
                     const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
                       child: Icon(
-                        Icons.edit_document,
+                        Icons.edit,
                         size: 50,
                       ),
                     ),
@@ -449,27 +447,77 @@ class _CurrentPlantWidget extends StatefulWidget {
 }
 
 class _CurrentPlantWidgetState extends State<_CurrentPlantWidget> {
+  final CollectionReference _plantsInfo =
+      FirebaseFirestore.instance.collection('plants');
+  List<Widget> _plantCardList = [];
+
+  Color _getColorCode(String colorCode) {
+    RegExp regex = RegExp('0x[a-zA-Z0-9]+');
+    int hex = int.parse(regex.stringMatch(colorCode) ?? '0xFFffffff');
+
+    return Color(hex);
+  }
+
+  Future<QuerySnapshot<Object?>> _getData() async {
+    return await _plantsInfo.get();
+  }
+
+  Future _addPlantCard() async {
+    var data = _getData();
+
+    await data.then((value) {
+      if (value.docs.isNotEmpty) {
+        log(value.docs.length.toString());
+        if (_plantCardList.isEmpty) {
+          for (int i = 0; i < value.docs.length; ++i) {
+            Map<String, dynamic> map =
+                value.docs[i].data() as Map<String, dynamic>;
+            log(map.toString(), name: 'map');
+            _plantCardList.add(plantCard(map['name'] ?? 'error',
+                _getColorCode(map['color'] ?? Colors.black)));
+          }
+        }
+      } else {
+        print('not found');
+      }
+    });
+    return _plantCardList;
+  }
+
   @override
   Widget build(Object context) {
-    return Container(
-      height: 100,
-      margin: EdgeInsets.symmetric(vertical: 20.0),
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          plantCard('감자', Color.fromARGB(255, 184, 163, 87)),
-          plantCard('고구마', Colors.purple),
-          plantCard('당근', Colors.orange),
-          plantCard(
-            '가지',
-            Color.fromARGB(255, 95, 24, 108),
-          ),
-          plantCard(
-            '상추',
-            Colors.green,
-          )
-        ],
-      ),
+    log(_plantCardList.toString(), name: '_plantCardList');
+    return FutureBuilder(
+      future: _addPlantCard(),
+      builder: (BuildContext context, AsyncSnapshot snapshot) {
+        //해당 부분은 data를 아직 받아 오지 못했을 때 실행되는 부분
+        if (snapshot.hasData == false) {
+          return CircularProgressIndicator(); // CircularProgressIndicator : 로딩 에니메이션
+        }
+
+        //error가 발생하게 될 경우 반환하게 되는 부분
+        else if (snapshot.hasError) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              'Error: ${snapshot.error}', // 에러명을 텍스트에 뿌려줌
+              style: TextStyle(fontSize: 15),
+            ),
+          );
+        }
+
+        // 데이터를 정상적으로 받아오게 되면 다음 부분을 실행하게 되는 부분
+        else {
+          return Container(
+            height: 100,
+            margin: EdgeInsets.symmetric(vertical: 20.0),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: _plantCardList,
+            ),
+          );
+        }
+      },
     );
   }
 

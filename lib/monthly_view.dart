@@ -1,18 +1,113 @@
 import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'comp_upper_appbar.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'comp_lower_appbar.dart';
 
-// 월간 일지 화면 구성
+
+class MyApp extends StatelessWidget {
+  // This widget is the root of your application.
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Clean Calendar Demo',
+      home: MonthlyViewPage(),
+    );
+  }
+}
+
 class MonthlyViewPage extends StatefulWidget {
   const MonthlyViewPage({Key? key}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _MonthlyViewPageState();
 }
-
 class _MonthlyViewPageState extends State<MonthlyViewPage> {
-  @override
-  Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
-  }
 
+
+  DateTime selectedDay = DateTime(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
+
+  DateTime focusedDay = DateTime.now();
+/*
+  Map<DateTime, List<Event>> events = {
+    DateTime.utc(2022,12,13) : [ Event('title1'), Event('title2') ],
+    DateTime.utc(2022,12,14) : [ Event('title3') ],
+  };
+*/
+
+  /*
+  DocumentReference<Map<String, dynamic>> documentReference =
+    await FirebaseFirestore.instance.collection('plants').doc('carrot').get();
+*/
+  @override
+  Widget build(BuildContext context)  {
+
+    UpperAppbar appbar = new UpperAppbar(context);
+    appbar.changeTitle('월간', context);
+
+    LowerAppBar lowerAppbar = new LowerAppBar();
+
+    return Scaffold(
+      appBar: appbar.appBar,
+      body: FutureBuilder(
+        future: FirebaseFirestore.instance
+            .collection('plants')
+            .doc('선인장')
+            .get(),
+        builder: (context, AsyncSnapshot snapshot){
+          if (!snapshot.hasData) return const Scaffold();
+          Map<DateTime, List<Event>> events = {};
+            var date = DateTime.utc(DateTime.parse(snapshot.data['startDate']).year,DateTime.parse(snapshot.data['startDate']).month,DateTime.parse(snapshot.data['startDate']).day);
+            for(int i=0; i<20; i++){
+              events.addAll({date : [Event(snapshot.data['nickname'])]});
+              date = date.add(const Duration(days: 7));
+            }
+
+          List<Event> _getEventsForDay(DateTime day) {
+            return events[day] ?? [];
+          }
+          return TableCalendar(
+            //locale: 'ko_KR',
+            firstDay: DateTime.utc(2021, 10, 16),
+            lastDay: DateTime.utc(2030, 3, 14),
+            focusedDay: DateTime.now(),
+            onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
+              // 선택된 날짜의 상태를 갱신합니다.
+              setState((){
+
+                this.selectedDay = selectedDay;
+                this.focusedDay = focusedDay;
+              });
+
+            },
+            selectedDayPredicate: (DateTime day) {
+              // selectedDay 와 동일한 날짜의 모양을 바꿔줍니다.
+              return isSameDay(selectedDay, day);
+            },
+            calendarStyle: CalendarStyle(
+              markerSize: 10.0,
+              markerDecoration: BoxDecoration(
+                  color: Colors.grey,
+                  shape: BoxShape.circle
+              ),
+            ),
+            eventLoader: _getEventsForDay,
+          );
+          },
+      ),
+        bottomNavigationBar:
+          lowerAppbar.navigationBar
+
+    );
+  }
+}
+
+class Event {
+  String title;
+
+  Event(this.title);
 }
