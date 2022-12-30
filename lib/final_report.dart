@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
+import 'app.dart';
+import 'monthly_view.dart';
+
 // 최종 일지 페이지
 
 class FinalReportPage extends StatefulWidget {
@@ -27,10 +30,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
 
   void plantRegister() {
     setState(() {
-      FirebaseFirestore.instance.collection('users')
-          .doc('user1')
-          .collection('현재 키우는 식물')
-          .doc('식물1').update({
+      FirebaseFirestore.instance.collection('plants').doc('선인장').update({
         'rating' : _rating,
         'checked' : _ischecked,
         'report' : _textEditController.text,
@@ -46,6 +46,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
         title: '종료 일지 작성',
         home: Scaffold(
             appBar: AppBar(
+              backgroundColor: Colors.green,
               leading: IconButton(
                 onPressed: () {
                   Navigator.pop(context);
@@ -56,7 +57,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
               title: const Text('종료 일지 작성'),
             ),
             body: FutureBuilder(
-              future: FirebaseFirestore.instance.collection('users').doc('user1').collection('현재 키우는 식물').doc('식물1').get(),
+              future: FirebaseFirestore.instance.collection('plants').doc('선인장').get(),
               builder: (context, AsyncSnapshot snapshot) {
                 if (!snapshot.hasData) return const Scaffold();
                 return ListView(
@@ -64,41 +65,49 @@ class _FinalReportPageState extends State<FinalReportPage> {
                   children: [
                     Container(
                         margin:
-                            const EdgeInsets.only(left: 10, top: 20, right: 10),
+                        const EdgeInsets.only(left: 10, top: 20, right: 10),
                         child: Row(
                           children: [
                             //해당 식물 대표 사진? 아이콘  ,
                             Container(
+                              width: 80,
+                              height: 80,
                               margin: const EdgeInsets.only(right: 10),
-                              child: const Text('아이콘 들어갈 자리'),
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.black,
+                                  width: 3
+                                )
+                              ),
+                              child: const Center(child: Text('사진')),
                             ),
 
                             Expanded(
                                 child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              //세로로 시작부분을 정렬
-                              children: [
-                                Container(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(
-                                        '이름: ${snapshot.data['이름']} (${snapshot.data['애칭']})') //식물 이름 (애칭)
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  //세로로 시작부분을 정렬
+                                  children: [
+                                    Container(
+                                        padding: const EdgeInsets.only(bottom: 8),
+                                        child: Text(
+                                            '이름: ${snapshot.data['name']} (${snapshot.data['nickname']})') //식물 이름 (애칭)
                                     ),
-                                Container(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: Text(
-                                        '재배 기간: ${formatter.format(snapshot.data['시작일'].toDate())} ~ ${formatter.format(DateTime.now())}') //재배 기간 2022/11/22 ~ 2022/12/22
+                                    Container(
+                                        padding: const EdgeInsets.only(bottom: 8),
+                                        child: Text(
+                                            '재배 기간: ${snapshot.data['startDate']} ~ ${formatter.format(DateTime.now())}') //재배 기간 2022/11/22 ~ 2022/12/22
                                     ),
-                                // Container(
-                                //     padding: const EdgeInsets.only(bottom: 8),
-                                //     child: const Text(
-                                //         '물 준 횟수: ') //체크되어있는 부분만 count가 가능할까?
-                                //     ),
-                                Container(
-                                    padding: const EdgeInsets.only(bottom: 8),
-                                    child: const Text('일지 작성 횟수: ') //이건 쉬울듯
+                                    // Container(
+                                    //     padding: const EdgeInsets.only(bottom: 8),
+                                    //     child: const Text(
+                                    //         '물 준 횟수: ') //체크되어있는 부분만 count가 가능할까?
+                                    //     ),
+                                    Container(
+                                        padding: const EdgeInsets.only(bottom: 8),
+                                        child: const Text('일지 작성 횟수: 1') //이건 쉬울듯
                                     ),
-                              ],
-                            ))
+                                  ],
+                                ))
                           ],
                         )), //식물의 정보를 담은 구역
 
@@ -115,7 +124,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
                       margin: const EdgeInsets.only(left: 8, right: 8),
                       height: 50,
                       decoration: const BoxDecoration(
-                          //color는 Them?
+                        //color는 Them?
                           color: Colors.greenAccent,
                           borderRadius: BorderRadius.all(
                             Radius.circular(10),
@@ -126,7 +135,7 @@ class _FinalReportPageState extends State<FinalReportPage> {
                           //각각 목표 + 달성여부의 체크박스가 자식
                           Container(
                             margin: const EdgeInsets.only(left: 8, right: 8),
-                            child: Text('${snapshot.data['목표']}'),
+                            child: Text('${snapshot.data['goal']}'),
                           ), //Container로 만들면 체크박스를 못만들듯...
 
                           Checkbox(
@@ -189,16 +198,15 @@ class _FinalReportPageState extends State<FinalReportPage> {
                       Container(
                         margin: const EdgeInsets.all(10),
                         child: ElevatedButton(
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all(Colors.green),
+                          ),
                           onPressed: () => {
                             plantRegister(),
-                            Navigator.pop(context)
-                            //FirebaseFirestore.instance.collection('users').doc('user1')_textEditController.text
-                            //FirebaseFirestore. ~~~~~ _rating값 넣으면 된다.
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => MonthlyViewPage()))
                           },
                           child: Text('등록하기'),
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.all(10),
-                          ),
+
                         ),
                       ),
                   ],

@@ -1,4 +1,3 @@
-// 주간 일지 화면 구성
 import 'package:farm_management_proj/comp_lower_appbar.dart';
 import 'package:farm_management_proj/comp_upper_appbar.dart';
 import 'package:flutter/material.dart';
@@ -82,6 +81,7 @@ class _WeeklyViewPageState extends State<WeeklyViewPage> {
                       )),
                 ],
               )),
+          //타임라인 할일별 카드
           Expanded(
             child: Center(
               child: Text(

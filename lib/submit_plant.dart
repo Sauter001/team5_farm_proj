@@ -9,17 +9,10 @@ import 'package:weekday_selector/weekday_selector.dart';
 import 'dart:ui';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
+import 'monthly_view.dart';
+
 //void main() => runApp(MyApp());
 // 식물 등록 페이지
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const SubmitPlantPage(),
-    );
-  }
-}
 
 class SubmitPlantPage extends StatefulWidget {
   const SubmitPlantPage({Key? key}) : super(key: key);
@@ -145,6 +138,9 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                               ),
                               actions: <Widget>[
                                 ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                                  ),
                                   child: const Text('완료'),
                                   onPressed: () {
                                     setState(() => currentColor = pickerColor);
@@ -311,6 +307,9 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                     const Text('반복 설정', style: TextStyle(fontSize: 20)),
                     Spacer(),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.green),
+                      ),
                       child: const Text('+ 추가'),
                       onPressed: () {
                         showDialog(
@@ -395,10 +394,16 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                                     actions: <Widget>[
                                       Spacer(),
                                       ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.green),
+                                          ),
                                           child: const Text('닫기'),
                                           onPressed: () =>
                                               Navigator.pop(context)),
                                       ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.green),
+                                          ),
                                           child: const Text('확인'),
                                           onPressed: () {
                                             FirebaseFirestore.instance
@@ -439,6 +444,9 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
               SizedBox(
                 //alignment: Alignment.topCenter,
                 child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  ),
                   onPressed: () async {
                     print('${_plantNameController.text}');
                     print('${_nicknameController.text}');
@@ -460,6 +468,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                     setState(() {
                       plantCnt += 1;
                     });
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => MonthlyViewPage()));
                   },
                   child: const Text('저장하기'),
                 ),

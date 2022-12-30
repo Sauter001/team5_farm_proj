@@ -14,8 +14,8 @@ class LowerAppBar {
   final BottomNavigationBar _navigationBar = BottomNavigationBar(
     items: const <BottomNavigationBarItem>[
       BottomNavigationBarItem(
-        icon: Icon(Icons.add),
-        label: '할 일 추가',
+        icon: Icon(Icons.calendar_month),
+        label: '월별 보기',
       ),
       BottomNavigationBarItem(
         icon: Icon(Icons.mode_edit),

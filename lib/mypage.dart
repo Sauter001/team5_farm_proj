@@ -9,6 +9,8 @@ import 'package:folding_cell/folding_cell.dart';
 import 'dart:developer';
 import 'comp_upper_appbar.dart';
 import 'comp_firebase_crud.dart';
+import 'final_report_view.dart';
+import 'individual_daily_report_view.dart';
 
 // 마이 페이지
 class MyPage extends StatefulWidget {
@@ -300,7 +302,13 @@ class _MyPageState extends State<MyPage> {
                   ],
                 ),
               ),
-
+              ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(Colors.green),
+                  ),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => FinalReportViewPage())),
+                  child: Text('일지 보기')
+              ),
               // 로그아웃 버튼
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 10),
