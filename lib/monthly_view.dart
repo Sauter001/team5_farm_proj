@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'comp_upper_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'comp_lower_appbar.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -65,6 +65,8 @@ class _MonthlyViewPageState extends State<MonthlyViewPage> {
     UpperAppbar appbar = new UpperAppbar(context);
     appbar.changeTitle('월간', context);
 
+    LowerAppBar lowerAppbar = new LowerAppBar();
+
     return Scaffold(
       appBar: appbar.appBar,
       body: FutureBuilder(
@@ -112,8 +114,9 @@ class _MonthlyViewPageState extends State<MonthlyViewPage> {
             eventLoader: _getEventsForDay,
           );
           },
-      )
-
+      ),
+        bottomNavigationBar:
+          lowerAppbar.navigationBar
 
     );
   }
