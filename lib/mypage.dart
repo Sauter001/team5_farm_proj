@@ -452,7 +452,7 @@ class _CurrentPlantWidgetState extends State<_CurrentPlantWidget> {
   List<Widget> _plantCardList = [];
 
   Color _getColorCode(String colorCode) {
-    RegExp regex = RegExp('0x[a-zA-z0-9]+');
+    RegExp regex = RegExp('0x[a-zA-Z0-9]+');
     int hex = int.parse(regex.stringMatch(colorCode) ?? '0xFFffffff');
 
     return Color(hex);
