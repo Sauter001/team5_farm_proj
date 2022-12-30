@@ -6,9 +6,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:intl/intl.dart';
+import 'comp_upper_appbar.dart';
+import 'comp_lower_appbar.dart';
 
 import 'package:flutter_3d_choice_chip/flutter_3d_choice_chip.dart';
 import 'package:video_thumbnail/video_thumbnail.dart';
+
+import 'monthly_view.dart';
 
 enum MediaType {
   image,
@@ -27,6 +31,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: '일지 작성하기',
+
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
@@ -67,368 +72,342 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _lettucePressed = false;
 
   List<DateTime?> _dialogCalendarPickerValue = [
-    // 입력받은 날짜 값을 출력하면 되는데 
+    // 입력받은 날짜 값을 출력하면 되는데
     // 값이 없으면 null 값 출력
     DateTime(2022, 12, 30),
   ];
 
 
+
   @override
   Widget build(BuildContext context) {
 
-      final ButtonStyle style =
-      ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
+    final ButtonStyle style =
+    ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20));
 
+    UpperAppbar appbar = new UpperAppbar(context);
+    appbar.changeTitle('일지 작성', context);
+
+    LowerAppBar lowerAppbar = new LowerAppBar();
 
     return Scaffold(
-      appBar: AppBar(
-        //centerTitle: true,
-        title: const Text("Image & Video Picker example"),
-      ),
-      body: Center(      
-          child: SingleChildScrollView( 
-        child: Container( 
-            margin: const EdgeInsets.all(20),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  _buildDefaultSingleDatePickerWithValue(),
-                ],
-              ),
-                // 작물 버튼
+        appBar: appbar.appBar,
+        body: Center(
+          child: SingleChildScrollView(
+            child: Container(
+              margin: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      _buildDefaultSingleDatePickerWithValue(),
+                    ],
+                  ),
+                  // 작물 버튼
 
-              
-              Row(
-                //mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                children: <Widget>[
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                    backgroundColor: _sweetPotatoPressed ?Colors.red : Colors.green),
-                    onPressed: () {
-                      setState(() {
-                        _sweetPotatoPressed = !_sweetPotatoPressed;
-                      });
-                    },
-                    child: const Text('고구마',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                    backgroundColor: _potatoPressed ?Colors.red : Colors.green),
-                    onPressed: () {
-                      setState(() {
-                        _potatoPressed = !_potatoPressed;
-                      });
-                    },
-                    child: const Text('감자',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                    backgroundColor: _carrotPressed ?Colors.red : Colors.green),
-                    onPressed: () {
-                      setState(() {
-                        _carrotPressed = !_carrotPressed;
-                      });
-                    },
-                    child: const Text('당근',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                    backgroundColor: _lettucePressed ?Colors.red : Colors.green),
-                    onPressed: () {
-                      setState(() {
-                        _lettucePressed = !_lettucePressed;
-                      });
-                    },
-                    child: const Text('상추',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-                const Text('날씨'),
-              Row(
-                //mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                children: <Widget>[
-                 
-                  IconButton(
-                    icon: Icon(Icons.wb_sunny_outlined),
-                    color: _sunnyPressed ? Colors.red : Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      setState(() {
-                        _sunnyPressed = !_sunnyPressed;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.cloud_outlined),
-                    color: _cloudPressed ? Colors.red : Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      setState(() {
-                        _cloudPressed = !_cloudPressed;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.air),
-                    color: _airPressed ? Colors.red : Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      setState(() {
-                        _airPressed = !_airPressed;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.ac_unit_outlined),
-                    color: _acPressed ? Colors.red : Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      setState(() {
-                        _acPressed = !_acPressed;
-                      });
-                    },
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.cloudy_snowing),
-                    color: _snowPressed ? Colors.red : Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      setState(() {
-                        _snowPressed = !_snowPressed;
-                      });
-                    },
-                  ),
-                ],
-              ),
-
-                const Text('사진'),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    ChoiceChip3D(
-                      style: ChoiceChip3DStyle.blue,
-                      selected: _mediaType == MediaType.image,
-                      onSelected: () {
-                        setState(() {
-                          _mediaType = MediaType.image;
-                        });
-                      },
-                      onUnSelected: () {},
-                      height: 50,
-                      child: const Text(
-                        "사진 버튼",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 30,
-                    ),
-                    ChoiceChip3D(
-                      style: ChoiceChip3DStyle.red,
-                      selected: _mediaType == MediaType.video,
-                      onSelected: () {
-                        setState(() {
-                          _mediaType = MediaType.video;
-                        });
-                      },
-                      onUnSelected: () {},
-                      height: 50,
-                      child: const Text(
-                        "비디오 버튼",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 20,
-                ),
-                (imagePath != null)
-                    ? Image.file(File(imagePath!))
-                    : Container(
-                        width: 300,
-                        height: 300,
-                        color: Colors.grey[300]!,
-                      ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.grey,
-                            shadowColor: Colors.grey[400],
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xff795548)
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _lettucePressed = !_lettucePressed;
+                          });
+                        },
+                        child: const Text('선인장',
+                          style: TextStyle(
+                            color: Colors.white,
                           ),
-                          onPressed: () {
-                            pickMedia(ImageSource.gallery);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.image,
-                                  size: 30,
-                                  color: Colors.red,
-                                ),
-                                Text(
-                                  "갤러리",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+
+                            side: const BorderSide(
+                                color: const Color(0xfff44336),
+                                width: 3
+                            )),
+                        onPressed: () {
+
+                          setState(() {
+                            _sweetPotatoPressed = !_sweetPotatoPressed;
+                          });
+                        },
+                        child: const Text('고구마',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+
+                            side: const BorderSide(
+                                color: const Color(0xff673ab7),
+                                width: 3
+                            )),
+                        onPressed: () {
+                          setState(() {
+                            _potatoPressed = !_potatoPressed;
+                          });
+                        },
+                        child: const Text('가지',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.white,
+
+                            side: const BorderSide(
+                                color: const Color(0xff443a49),
+                                width: 3
+                            )),
+                        onPressed: () {
+                          setState(() {
+                            _carrotPressed = !_carrotPressed;
+                          });
+                        },
+                        child: const Text('상추',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+
+                    ],
+                  ),
+
+                  const Text('날씨'),
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                    children: <Widget>[
+
+                      IconButton(
+                        icon: Icon(Icons.wb_sunny_outlined),
+                        color: _sunnyPressed ? const Color(0xff443a49) : Colors.green,
+                        //size: 30.0,
+                        onPressed: () {
+                          setState(() {
+                            _sunnyPressed = !_sunnyPressed;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.cloud_outlined),
+                        color: _cloudPressed ? const Color(0xff443a49) : Colors.green,
+                        //size: 30.0,
+                        onPressed: () {
+                          setState(() {
+                            _cloudPressed = !_cloudPressed;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.air),
+                        color: _airPressed ? const Color(0xff443a49) : Colors.green,
+                        //size: 30.0,
+                        onPressed: () {
+                          setState(() {
+                            _airPressed = !_airPressed;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.ac_unit_outlined),
+                        color: _acPressed ? const Color(0xff443a49) : Colors.green,
+                        //size: 30.0,
+                        onPressed: () {
+                          setState(() {
+                            _acPressed = !_acPressed;
+                          });
+                        },
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.cloudy_snowing),
+                        color: _snowPressed ? const Color(0xff443a49) : Colors.green,
+                        //size: 30.0,
+                        onPressed: () {
+                          setState(() {
+                            _snowPressed = !_snowPressed;
+                          });
+                        },
+                      ),
+                    ],
+                  ),
+
+                  const Text('사진'),
+
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  (imagePath != null)
+                      ? Image.file(File(imagePath!))
+                      : Container(
+                    width: 300,
+                    height: 300,
+                    color: Colors.grey[300]!,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.grey,
+                              shadowColor: Colors.grey[400],
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
                             ),
-                          ),
-                        )),
-                    Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 5),
-                        padding: const EdgeInsets.symmetric(vertical: 20),
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            primary: Colors.white,
-                            onPrimary: Colors.grey,
-                            shadowColor: Colors.grey[400],
-                            elevation: 10,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)),
-                          ),
-                          onPressed: () {
-                            pickMedia(ImageSource.camera);
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                                vertical: 5, horizontal: 5),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: const [
-                                Icon(
-                                  Icons.camera_alt,
-                                  size: 30,
-                                  color: Colors.red,
-                                ),
-                                Text(
-                                  "카메라",
-                                  style: TextStyle(
-                                      fontSize: 13,
-                                      color: Colors.green,
-                                      fontWeight: FontWeight.bold),
-                                )
-                              ],
+                            onPressed: () {
+                              pickMedia(ImageSource.gallery);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 5),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(
+                                    Icons.image,
+                                    size: 30,
+                                    color: Colors.red,
+                                  ),
+                                  Text(
+                                    "갤러리",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                        )),
-                  ],
-                ),
-                             
-                Row(
-                //mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                // 물주기 흙갈기 위젯 버튼
-                children: <Widget>[
-                  const Text('물주기'),
-                  Checkbox(
-                    value: _isCheckedWater,
-                    onChanged: (value) {
-                      setState(() {
-                        _isCheckedWater = value!;
-                      });
-                    }
+                          )),
+                      Container(
+                          margin: const EdgeInsets.symmetric(horizontal: 5),
+                          padding: const EdgeInsets.symmetric(vertical: 20),
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.grey,
+                              shadowColor: Colors.grey[400],
+                              elevation: 10,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8.0)),
+                            ),
+                            onPressed: () {
+                              pickMedia(ImageSource.camera);
+                            },
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                  vertical: 5, horizontal: 5),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: const [
+                                  Icon(
+                                    Icons.camera_alt,
+                                    size: 30,
+                                    color: Colors.red,
+                                  ),
+                                  Text(
+                                    "카메라",
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.bold),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )),
+                    ],
                   ),
-                  const Text('흙갈기'),
-                  Checkbox(
-                    value: _isCheckedSoil,
-                    onChanged: (value) {
-                      setState(() {
-                        _isCheckedSoil = value!;
-                      });
-                    }
+
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    // 물주기 흙갈기 위젯 버튼
+                    children: <Widget>[
+                      const Text('물주기'),
+                      Checkbox(
+                          value: _isCheckedWater,
+                          onChanged: (value) {
+                            setState(() {
+                              _isCheckedWater = value!;
+                            });
+                          }
+                      ),
+                    ],
+                  ),
+
+                  const Text('메모'),
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16), // 위치 정하기
+                    child: TextField(
+                      //maxLines: maxLine,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: '메모를 작성해 주세요',
+                        filled: true,
+                      ),
+                      minLines: 5,
+                      maxLines: 6,
+                    ),
+                  ),
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+
+                    children: <Widget>[
+                      ElevatedButton(
+                        style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
+                        ),
+                        onPressed: () {
+                          _showSaveDialog(context);
+                        },
+                        child: const Text('작성완료'),
+                      ),
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        style: const ButtonStyle(
+                          backgroundColor: MaterialStatePropertyAll<Color>(Colors.red),
+                        ),
+                        onPressed: () {
+                          _showDeleteDialog(context);
+                        },
+                        child: const Text('삭제하기'),
+                      ),
+                    ],
                   ),
                 ],
               ),
-
-                const Text('메모'),
-              const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 16), // 위치 정하기
-                child: TextField(
-                  //maxLines: maxLine,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: '메모를 작성해 주세요',
-                    filled: true,
-                  ),
-                  minLines: 5,
-                  maxLines: 6,
-                ),
-              ),
-                Row(
-                //mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-                children: <Widget>[
-                  ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.green),
-                    ),
-                    onPressed: () {
-                      _showSaveDialog(context);
-                    },
-                    child: const Text('작성완료'),
-                  ),
-                  const SizedBox(height: 30),
-                  ElevatedButton(
-                    style: const ButtonStyle(
-                      backgroundColor: MaterialStatePropertyAll<Color>(Colors.red),
-                    ),
-                    onPressed: () {
-                      _showDeleteDialog(context);
-                    },
-                    child: const Text('삭제하기'),
-                  ),
-                ],
-              ),
-              ],
             ),
           ),
-        ),
-      ),
+        )
     );
   }
 
@@ -455,46 +434,46 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future<dynamic> _showSaveDialog(BuildContext context) {
     return showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('확인 알림'),
-              content: Text('일지를 저장하시겠습니까?'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('네')),
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('아니오')),
-              ],
-            ),
-          );
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('확인 알림'),
+        content: Text('일지를 저장하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+              onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => MonthlyViewPage())),
+              child: Text('네')),
+          ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('아니오')),
+        ],
+      ),
+    );
   }
 
   Future<dynamic> _showDeleteDialog(BuildContext context) {
     return showDialog(
-            context: context,
-            builder: (BuildContext context) => AlertDialog(
-              title: Text('확인 알림'),
-              content: Text('일지를 삭제하시겠습니까?'),
-              actions: [
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('네')),
-                ElevatedButton(
-                    onPressed: () => Navigator.of(context).pop(),
-                    child: Text('아니오')),
-              ],
-            ),
-          );
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: Text('확인 알림'),
+        content: Text('일지를 삭제하시겠습니까?'),
+        actions: [
+          ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('네')),
+          ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: Text('아니오')),
+        ],
+      ),
+    );
   }
 
 
   // 달력 날짜 클릭시 시간 삭제
   String _getValueText(
-    CalendarDatePicker2Type datePickerType,
-    List<DateTime?> values,
-  ) {
+      CalendarDatePicker2Type datePickerType,
+      List<DateTime?> values,
+      ) {
     var valueText = (values.isNotEmpty ? values[0] : DateTime.now())
         .toString()
         .replaceAll('00:00:00.000', '');
@@ -511,10 +490,10 @@ class _MyHomePageState extends State<MyHomePage> {
     return valueText;
   }
 
-  
+
   _buildCalendarDialogButton() {
     const dayTextStyle =
-        TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
+    TextStyle(color: Colors.black, fontWeight: FontWeight.w700);
     final config = CalendarDatePicker2WithActionButtonsConfig(
         dayTextStyle: dayTextStyle,
         calendarType: CalendarDatePicker2Type.single,
@@ -552,8 +531,8 @@ class _MyHomePageState extends State<MyHomePage> {
         children: [
           IconButton(
             // 달력 아이콘
-            icon: Icon(Icons.event), 
-                    color: Colors.green,
+            icon: Icon(Icons.event),
+            color: Colors.green,
             onPressed: () async {
               final values = await showCalendarDatePicker2Dialog(
                 context: context,
@@ -571,9 +550,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   values,
                 ));
                 setState(() {
-                    _dialogCalendarPickerValue = values; // 캘린더를 누르면 값이 변경되도록 만들기                  
+                  _dialogCalendarPickerValue = values; // 캘린더를 누르면 값이 변경되도록 만들기
                 });
-              } 
+              }
             },
           ),
         ],
@@ -587,43 +566,43 @@ class _MyHomePageState extends State<MyHomePage> {
     //final startDate = _dialogCalendarPickerValue.toString().replaceAll('00:00:00.000', '');
 
     // 화면에 출력되는 내용
-    
+
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    
-      children: <Widget>[  
+
+      children: <Widget>[
         // 버튼 클릭시 이전 날짜로 이동
         IconButton(
-                    icon: Icon(Icons.arrow_back_ios),
-                    color: Colors.green,
-                    //size: 30.0,
-                    onPressed: () {
-                      // _dialogCalendarPickerValue = _dialogCalendarPickerValue.subtract(Duration(days: 10));
-                      // 
-                    },
-                  ),  
-        _buildCalendarDialogButton(), 
+          icon: Icon(Icons.arrow_back_ios),
+          color: Colors.green,
+          //size: 30.0,
+          onPressed: () {
+            // _dialogCalendarPickerValue = _dialogCalendarPickerValue.subtract(Duration(days: 10));
+            //
+          },
+        ),
+        _buildCalendarDialogButton(),
         const SizedBox(width: 10),
 
         // 선택한 날짜 화면에 출력하기
-            Text(
-              _getValueText(
-                config.calendarType,
-                _dialogCalendarPickerValue,
-              ),
-              style: TextStyle(fontSize: 30),
-            ),
-            
-            // 버튼 클릭시 다음 날짜로 이동
-            IconButton(
-              icon: Icon(Icons.arrow_forward_ios),
-              color: Colors.green,
-                    //size: 30.0,
-              onPressed: () {
-                //_dialogCalendarPickerValue = _dialogCalendarPickerValue.add(Duration(days: 1));
-              },
-            ),
+        Text(
+          _getValueText(
+            config.calendarType,
+            _dialogCalendarPickerValue,
+          ),
+          style: TextStyle(fontSize: 30),
+        ),
+
+        // 버튼 클릭시 다음 날짜로 이동
+        IconButton(
+          icon: Icon(Icons.arrow_forward_ios),
+          color: Colors.green,
+          //size: 30.0,
+          onPressed: () {
+            //_dialogCalendarPickerValue = _dialogCalendarPickerValue.add(Duration(days: 1));
+          },
+        ),
       ],
     );
   }

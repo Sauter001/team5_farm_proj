@@ -1,8 +1,8 @@
-// 주간 일지 화면 구성
 import 'package:farm_management_proj/comp_lower_appbar.dart';
 import 'package:farm_management_proj/comp_upper_appbar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_event_calendar/flutter_event_calendar.dart';
+import 'package:flutter_calendar_week/flutter_calendar_week.dart';
+import 'package:intl/intl.dart';
 
 class WeeklyViewPage extends StatefulWidget {
   const WeeklyViewPage({Key? key}) : super(key: key);
@@ -12,6 +12,7 @@ class WeeklyViewPage extends StatefulWidget {
 }
 
 class _WeeklyViewPageState extends State<WeeklyViewPage> {
+  final CalendarWeekController _controller = CalendarWeekController();
   LowerAppBar navigationbar = LowerAppBar();
 
   @override
@@ -21,30 +22,75 @@ class _WeeklyViewPageState extends State<WeeklyViewPage> {
       home: Scaffold(
         appBar: appbar.appBar,
         bottomNavigationBar: navigationbar.navigationBar,
-        body: Center(
-          child: EventCalendar(
-            calendarType: CalendarType.GREGORIAN,
-            calendarLanguage: 'en',
-            calendarOptions: CalendarOptions(viewType: ViewType.MONTHLY),
-            headerOptions: HeaderOptions(
-                weekDayStringType: WeekDayStringTypes.SHORT,
-                monthStringType: MonthStringTypes.FULL),
-            eventOptions: EventOptions(
-                emptyText: '할 일을 생성해 주세요.', emptyTextColor: Colors.black12),
-            dayOptions:
-                DayOptions(eventCounterViewType: DayEventCounterViewType.DOT),
-            showLoadingForEvent: true,
-            events: [
-              Event(
-                  child: const Text('test Event'),
-                  dateTime: CalendarDateTime(
-                      year: 2022,
-                      month: 12,
-                      day: 28,
-                      calendarType: CalendarType.GREGORIAN))
-            ],
-          ),
-        ),
+        body: Column(children: [
+          Container(
+              decoration: BoxDecoration(boxShadow: [
+                BoxShadow(
+                    color: Colors.black.withOpacity(0.2),
+                    blurRadius: 10,
+                    spreadRadius: 1)
+              ]),
+              child: CalendarWeek(
+                controller: _controller,
+                height: 100,
+                showMonth: true,
+                minDate: DateTime.now().add(
+                  Duration(days: -365),
+                ),
+                maxDate: DateTime.now().add(
+                  Duration(days: 365),
+                ),
+                onDatePressed: (DateTime datetime) {
+                  // Do something
+                  setState(() {});
+                },
+                onDateLongPressed: (DateTime datetime) {
+                  // Do something
+                },
+                onWeekChanged: () {
+                  // Do something
+                },
+                monthViewBuilder: (DateTime time) => Align(
+                  alignment: FractionalOffset.center,
+                  child: Container(
+                      margin: const EdgeInsets.symmetric(vertical: 4),
+                      child: Text(
+                        DateFormat.yMMMM().format(time),
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Colors.blue, fontWeight: FontWeight.w600),
+                      )),
+                ),
+                decorations: [
+                  DecorationItem(
+                      decorationAlignment: FractionalOffset.bottomRight,
+                      date: DateTime.now(),
+                      decoration: Icon(
+                        Icons.today,
+                        color: Colors.blue,
+                      )),
+                  DecorationItem(
+                      date: DateTime.now().add(Duration(days: 3)),
+                      decoration: Text(
+                        'Holiday',
+                        style: TextStyle(
+                          color: Colors.brown,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      )),
+                ],
+              )),
+          //타임라인 할일별 카드
+          Expanded(
+            child: Center(
+              child: Text(
+                '주간 TO DO LIST',
+                style: TextStyle(fontSize: 30),
+              ),
+            ),
+          )
+        ]),
       ),
     );
   }
