@@ -31,11 +31,8 @@ class SubmitPlantPage extends StatefulWidget {
 class _SubmitPlantPageState extends State<SubmitPlantPage> {
   final _plantNameController = TextEditingController();
   final _nicknameController = TextEditingController();
-  DateTime? _selectedTime = DateTime.now();
-  DateTime today = new DateTime.now();
   bool ing = true;
-  //String formattedDate = DateFormat('yyyy/mm/dd').format(today);
-  //TextEditingController _startDateController = new TextEditingController(text: formattedDate);
+  TextEditingController _startDateController = new TextEditingController(text: DateFormat('yyyy-mm-dd').format(DateTime.now()));
   TextEditingController _endDateController = TextEditingController();
 
   List<DateTime?> _singleDatePickerValueWithDefaultValue = [
@@ -47,10 +44,10 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
 
   DateTime _selectedDate = DateTime.now();
 
-  final _goalList = ['죽이지 않기', '싹 틔우기', '꽃 피우기', '수확하기', '직접 입력'];
+  final _goalList = ['죽이지 않기', '싹 틔우기', '꽃 피우기', '수확하기'];
   String? _selectedGoalValue;
 
-  final _toDOList = ['물 주기', '흙 갈기'];
+  final _toDOList = ['물 주기', '흙 갈기', '화분 바꾸기'];
   String? _selectedToDoValue;
   final weekValues = List.filled(7, false);
 
@@ -69,7 +66,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
 
     final values = List.filled(7, false);
     DateTime today = new DateTime.now();
-    String formattedDate = DateFormat('yyyy/MM/dd').format(today);
+    String formattedDate = DateFormat('yyyy-MM-dd').format(today);
     //TextEditingController _startDateController = new TextEditingController(text: today.toString());
     TextEditingController? _startDateController =
         new TextEditingController(text: formattedDate);
@@ -194,27 +191,11 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                   IconButton(
                     icon: const Icon(Icons.calendar_month),
                     onPressed: () {
-                      Future<DateTime?> selectedDate = showDatePicker(
-                        context: context, // context 인수전달
-                        initialDate: DateTime.now(), // 초깃값
-                        firstDate: DateTime(2021), // 시작일 2021년 1월 1일
-                        lastDate: DateTime(2030), // 마지막일 2030년 1월 1일
-                        builder: (BuildContext context, Widget? child) {
-                          return Theme(
-                            // 따로 정의 하지 않으면 default 값이 설정 됨
-                            data: ThemeData.dark(), // 다크테마
-                            child: child as Widget,
-                          );
-                        },
-                      );
-                      selectedDate.then((dateTime) {
-                        setState(() {
-                          log(dateTime.toString());
-                          _startDateController = TextEditingController(
-                              text: DateFormat('yyyy/MM/dd')
-                                  .format(dateTime ?? DateTime.now()));
-                        });
-                      });
+                      showDialog(
+                          context: ctx,
+                          builder: (context) {
+                            return alert;
+                          });
                     },
                     iconSize: 30,
                   ),
@@ -231,7 +212,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                         ),
                       ),
                       style: TextStyle(
-                        fontSize: 15,
+                        fontSize: 25,
                         height: 0.5,
                       ),
                       controller: _startDateController,
@@ -249,24 +230,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                       showDialog(
                           context: ctx,
                           builder: (context) {
-                            return /*AlertDialog(
-                                    title: Text("날짜를 선택해주세요"),
-                                    actions: [
-                                      okButton,
-                                    ],
-                                    content: Container(
-                                        width: 300,
-                                        height: 300,
-                                        child: CalendarDatePicker2(
-                                          config: CalendarDatePicker2Config(),
-                                          initialValue: ,
-
-                                          onValueChanged: (values) =>
-                                              setState(() => _endDateController = values),
-                                        )
-                                    ),
-                                  );*/
-                                alert;
+                            return alert;
                           });
                     },
                     iconSize: 30,
@@ -295,35 +259,29 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
               const SizedBox(height: 12.0),
               Row(
                 children: <Widget>[
-                  const Text('목표  ', style: TextStyle(fontSize: 20)),
-                  Spacer(),
-                  ElevatedButton(
-                    onPressed: () {},
-                    child: const Text('+ 추가'),
-                  ),
-                ],
-              ),
-              Divider(thickness: 2, color: Colors.black54, height: 15),
-              Container(
-                  child: DropdownButton(
-                hint: Text('목표 입력하기'),
-                items: _goalList
-                    .map(
-                      (String item) => DropdownMenuItem(
+                  const Text('목표   ', style: TextStyle(fontSize: 20)),
+                  DropdownButton(
+                    hint: Text('선택해주세요'),
+                    items: _goalList
+                        .map(
+                          (String item) => DropdownMenuItem(
                         child: Text(item),
                         value: item,
                       ),
                     )
-                    .toList(),
-                onChanged: (String? value) => setState(() {
-                  print('==> ${this._selectedGoalValue}');
-                  print('==> selected $value');
-                  /* if('${this._selectedGoalValue}' == '직접 입력') {goalEnter = true;}*/
+                        .toList(),
+                    onChanged: (String? value) => setState(() {
+                      print('==> ${this._selectedGoalValue}');
+                      print('==> selected $value');
+                      /* if('${this._selectedGoalValue}' == '직접 입력') {goalEnter = true;}*/
 
-                  this._selectedGoalValue = value;
-                }),
-                value: _selectedGoalValue,
-              )),
+                      this._selectedGoalValue = value;
+                    }),
+                    value: _selectedGoalValue,
+                  )
+
+                ],
+              ),
 /*
                       if(goalEnter == true)
 
@@ -497,7 +455,7 @@ class _SubmitPlantPageState extends State<SubmitPlantPage> {
                       'startDate': _startDateController?.text,
                       'endDate': _endDateController.text,
                       'goal': _selectedGoalValue,
-                      'ing': ing
+                      'ing': ing,
                     }).then((value) => print("완료"));
                     setState(() {
                       plantCnt += 1;

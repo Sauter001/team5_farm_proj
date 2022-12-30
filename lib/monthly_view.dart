@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'comp_upper_appbar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'comp_lower_appbar.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -45,39 +45,25 @@ class _MonthlyViewPageState extends State<MonthlyViewPage> {
 */
   @override
   Widget build(BuildContext context)  {
-   /* Map<DateTime, List<Event>> events = {
-      DateTime.utc(2022,12,13) : [ Event('title'), Event('title2') ],
-      DateTime.utc(2022,12,14) : [ Event('title3') ],
-    };
-    List<Event> _getEventsForDay(DateTime day) {
-      return events[day] ?? [];
-    }*/
-    //var plantName = documentSnapshot.;
-    var documentSnapshot = FirebaseFirestore.instance
-        .collection('plants')
-        .doc('가지')
-        .get()
-        .then((DocumentSnapshot doc) {
-          final data = doc.data();
-          //final name = List.from(data?['name']);
-        }
-    );
+
     UpperAppbar appbar = new UpperAppbar(context);
     appbar.changeTitle('월간', context);
+
+    LowerAppBar lowerAppbar = new LowerAppBar();
 
     return Scaffold(
       appBar: appbar.appBar,
       body: FutureBuilder(
         future: FirebaseFirestore.instance
             .collection('plants')
-            .doc('가지')
+            .doc('선인장')
             .get(),
         builder: (context, AsyncSnapshot snapshot){
           if (!snapshot.hasData) return const Scaffold();
           Map<DateTime, List<Event>> events = {};
             var date = DateTime.utc(DateTime.parse(snapshot.data['startDate']).year,DateTime.parse(snapshot.data['startDate']).month,DateTime.parse(snapshot.data['startDate']).day);
-            for(int i=0; i<10; i++){
-              events.addAll({date : [Event(snapshot.data['name'])]});
+            for(int i=0; i<20; i++){
+              events.addAll({date : [Event(snapshot.data['nickname'])]});
               date = date.add(const Duration(days: 7));
             }
 
@@ -112,8 +98,9 @@ class _MonthlyViewPageState extends State<MonthlyViewPage> {
             eventLoader: _getEventsForDay,
           );
           },
-      )
-
+      ),
+        bottomNavigationBar:
+          lowerAppbar.navigationBar
 
     );
   }
