@@ -85,7 +85,7 @@ class _WeeklyViewPageState extends State<WeeklyViewPage> {
           Expanded(
             child: Center(
               child: Text(
-                '주간 TO DO LIST',
+                '${_controller.selectedDate.day}/${_controller.selectedDate.month}/${_controller.selectedDate.year}',
                 style: TextStyle(fontSize: 30),
               ),
             ),

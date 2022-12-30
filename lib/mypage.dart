@@ -460,7 +460,7 @@ class _CurrentPlantWidgetState extends State<_CurrentPlantWidget> {
   List<Widget> _plantCardList = [];
 
   Color _getColorCode(String colorCode) {
-    RegExp regex = RegExp('0x[a-zA-z0-9]+');
+    RegExp regex = RegExp('0x[a-zA-Z0-9]+');
     int hex = int.parse(regex.stringMatch(colorCode) ?? '0xFFffffff');
 
     return Color(hex);
@@ -472,15 +472,18 @@ class _CurrentPlantWidgetState extends State<_CurrentPlantWidget> {
 
   Future _addPlantCard() async {
     var data = _getData();
+
     await data.then((value) {
       if (value.docs.isNotEmpty) {
         log(value.docs.length.toString());
-        for (int i = 0; i < value.docs.length; ++i) {
-          Map<String, dynamic> map =
-              value.docs[i].data() as Map<String, dynamic>;
-          log(map.toString(), name: 'map');
-          _plantCardList
-              .add(plantCard(map['name'], _getColorCode(map['color'])));
+        if (_plantCardList.isEmpty) {
+          for (int i = 0; i < value.docs.length; ++i) {
+            Map<String, dynamic> map =
+                value.docs[i].data() as Map<String, dynamic>;
+            log(map.toString(), name: 'map');
+            _plantCardList.add(plantCard(map['name'] ?? 'error',
+                _getColorCode(map['color'] ?? Colors.black)));
+          }
         }
       } else {
         print('not found');
